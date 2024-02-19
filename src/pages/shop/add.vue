@@ -1,12 +1,12 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watchEffect } from "vue"
+import { computed, onMounted, ref } from "vue"
 import { useRouter } from "vue-router";
 import { useProductsStore } from "@/stores/useProductsStore";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
 import Select from "@/components/UI/Select.vue";
-import FileUploader from "../../components/UI/FileUploader.vue"
+import FileUploader from "@/components/UI/FileUploader.vue"
 const router = useRouter();
 const productsStore = useProductsStore();
 
@@ -14,7 +14,7 @@ const product = ref({
 	name: "",
 	description: "",
 	article: "",
-	price: 0,
+	price: "",
 	amount: "",
 	thumbnail: "",
 	category: "",
@@ -31,15 +31,29 @@ const gameCenters = computed(() => {
 
 const selectedCategory = ref({uuid: ''});
 const selectedGameCenter = ref({uuid: ''});
+const selectedGameCenters = ref([]);
 
 onMounted(async () => {
 	await productsStore.loadGameCenters();
 	await productsStore.loadCategories();
 })
 
+const addGameCenter = () => {
+	selectedGameCenters.value.push('');
+};
+
+const updateGameCenterOptions = (index) => {
+	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center.uuid);
+	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center.uuid));
+};
+
 const postProduct = async () => {
 	try {
-		await productsStore.postProduct({...product.value, category: selectedCategory.value.uuid, availability_in_game_centers: [selectedGameCenter.value.uuid]});
+		await productsStore.postProduct({
+			...product.value,
+			category: selectedCategory.value.uuid,
+			availability_in_game_centers: selectedGameCenters.value.map(center => center.uuid)
+		});
 
 		await router.push("/shop");
 	} catch (error) {
@@ -77,7 +91,12 @@ const postProduct = async () => {
 				</div>
 				<div class="relative w-[300px]">
 					<label for="" class="mb-2 block">Клуб:</label>
-					<Select :options="gameCenters" v-model="selectedGameCenter" />
+					<div class="flex items-center">
+						<div v-for="(center, index) in selectedGameCenters" :key="index">
+							<Select :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" />
+						</div>
+						<Button @click.prevent="addGameCenter" class="btn-plus"><img src="@/assets/img/icons/plus.svg"></Button>
+					</div>
 				</div>
 				<div class="input-wrapper">
 					<label for="">Изображение:</label>

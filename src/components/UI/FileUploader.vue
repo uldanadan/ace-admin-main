@@ -1,7 +1,7 @@
 <script setup lang="ts">
 
-import FiletransferDataService from "../../services/FiletransferDataService"
-import { FileInfo } from "../../types/types"
+import FiletransferDataService from "@/services/FiletransferDataService"
+import { FileInfo } from "@/types/types"
 
 const emit = defineEmits<{
 	(event: "onFileUploaded", payload: FileInfo): void

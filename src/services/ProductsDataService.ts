@@ -9,14 +9,6 @@ class ProductsDataService {
 		return http.get(`/admin_panel/products/${id}/`)
 	}
 	updateProduct(slug: string, data: Product) {
-		// fetch(`https://sea-lion-app-n4saj.ondigitalocean.app/api/v1/admin_panel/products/${slug}/`, {
-		// 	method: "PUT",
-		// 	body: JSON.stringify(data)
-		// })
-		// 	.then(res => res.json())
-		// 	.then(data => console.log("data", data))
-		// 	.catch(err => console.log("error", err))
-		// console.log("slug", JSON.stringify(slug))
 		return http.patch(`/admin_panel/products/${slug}/`, data, {
 			headers: {
 				"Content-Type": "application/json"
