@@ -31,7 +31,7 @@ const gameCenters = computed(() => {
 
 const selectedCategory = ref({uuid: ''});
 const selectedGameCenter = ref({uuid: ''});
-const selectedGameCenters = ref([]);
+const selectedGameCenters = ref(['']);
 
 onMounted(async () => {
 	await productsStore.loadGameCenters();
@@ -43,8 +43,8 @@ const addGameCenter = () => {
 };
 
 const updateGameCenterOptions = (index) => {
-	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center.uuid);
-	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center.uuid));
+	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center?.uuid);
+	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center?.uuid));
 };
 
 const postProduct = async () => {
@@ -52,7 +52,7 @@ const postProduct = async () => {
 		await productsStore.postProduct({
 			...product.value,
 			category: selectedCategory.value.uuid,
-			availability_in_game_centers: selectedGameCenters.value.map(center => center.uuid)
+			availability_in_game_centers: selectedGameCenters.value.map(center => center?.uuid)
 		});
 
 		await router.push("/shop");
