@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref } from "vue"
 import FileTransferDataService from "@/services/FiletransferDataService"
 import { FileInfo } from "@/types/types"
 
@@ -6,20 +7,27 @@ const emit = defineEmits<{
 	(event: "onFileUploaded", payload: FileInfo): void
 }>()
 
+const imageName = ref<string>('');
+
 const onFileChange = async (e) => {
 	const formData = new FormData();
 	formData.append('is_active', true);
 	formData.append('image', e.target.files[0]);
-	FileTransferDataService.postImage(formData).then((r) => emit("onFileUploaded", r.data))
+
+	FileTransferDataService.postImage(formData).then((r) => {
+		emit("onFileUploaded", r.data);
+		imageName.value = e.target.files[0].name;
+	})
 }
 </script>
 
 <template>
 	<div class="file-uploader bg-white flex justify-center items-center py-14 border border-slate-300 rounded-md">
-		<label for="fileInput" class="upload-icon" >
+		<label for="fileInput" class="upload-icon">
 			<img src="@/assets/img/icons/load.svg" alt="Upload" class="upload-icon" >
 		</label>
 		<input id="fileInput" type="file" accept="image/*" @change="onFileChange">
+		<span v-if="imageName" class="file-name ml-2">{{ imageName }}</span>
 	</div>
 </template>
 
