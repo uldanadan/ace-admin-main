@@ -83,7 +83,8 @@ const postProduct = async () => {
 					<InputPrimary class="input-primary" type="number" name="amount" label="" v-model="product.amount" />
 				</div>
 				<div class="col-span-1 md:col-span-2">
-					<Textarea  :cols="20" :rows="5" name="description" label="Введите описание продукта" v-model="product.description" />
+					<label for="">Описание товара:</label>
+					<Textarea :cols="20" :rows="5" name="description" label="Введите описание продукта" v-model="product.description" />
 				</div>
 				<div class="relative w-[300px]">
 					<label for="" class="mb-2 block">Категория:</label>
