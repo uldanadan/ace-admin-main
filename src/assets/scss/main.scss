@@ -5,6 +5,7 @@
 @import "./hamburger";
 @import "./transitions";
 @import "vue3-toastify/dist/index.css";
+@import "vue-select/dist/vue-select.css";
 
 html,
 body {
@@ -46,7 +47,7 @@ body {
 		}
 	}
 	&-plus {
-		@apply border-[1.5px] border-brand-accent rounded-[15px] py-4 px-5 ml-3 shrink-0;
+		@apply border-[1.5px] border-brand-accent rounded-[15px] py-3 px-4 ml-3 shrink-0;
 	}
 }
 .input-wrapper {
