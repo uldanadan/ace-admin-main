@@ -5,9 +5,9 @@ import { useProductsStore } from "@/stores/useProductsStore";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
-// import Select from "@/components/UI/Select.vue";
 import VueSelect from "vue-select";
 import FileUploader from "@/components/UI/FileUploader.vue"
+
 const router = useRouter();
 const productsStore = useProductsStore();
 
@@ -31,19 +31,20 @@ const gameCenters = computed(() => {
 });
 
 const selectedCategory = ref({uuid: ''});
-const selectedGameCenter = ref({uuid: ''});
-const selectedGameCenters = ref(['']);
+const selectedGameCenters = ref([{uuid: ''}]);
 
 onMounted(async () => {
 	await productsStore.loadCategories();
 	await productsStore.loadGameCenters();
-	console.log('Categories:', categories.value);
-	console.log('Selected Category:', selectedCategory.value);
 });
 
-
 const addGameCenter = () => {
-	selectedGameCenters.value.push('');
+	selectedGameCenters.value.push({uuid: ''});
+};
+
+const updateGameCenterOptions = (index) => {
+	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center.uuid);
+	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center.uuid));
 };
 
 const postProduct = async () => {
@@ -51,7 +52,7 @@ const postProduct = async () => {
 		await productsStore.postProduct({
 			...product.value,
 			category: selectedCategory.value.uuid,
-			availability_in_game_centers: selectedGameCenters.value.map(center => center?.uuid)
+			availability_in_game_centers: selectedGameCenters.value.map(center => center.uuid)
 		});
 
 		await router.push("/shop");
@@ -87,13 +88,13 @@ const postProduct = async () => {
 				</div>
 				<div class="relative w-[300px]">
 					<label for="" class="mb-2 block">Категория:</label>
-					<VueSelect :options="categories.map(category => category.name)" v-model="selectedCategory" option-label="name" />
+					<VueSelect :options="categories" v-model="selectedCategory" label="name" />
 				</div>
 				<div class="relative">
 					<label for="" class="mb-2 block">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
 						<div v-for="(center, index) in selectedGameCenters" :key="index">
-							<VueSelect :options="gameCenters.map(gameCenter => gameCenter.name)" v-model="selectedGameCenters[index]" option-label="name" />
+							<VueSelect :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" label="name" />
 						</div>
 						<Button @click.prevent="addGameCenter" class="btn-plus"><img src="@/assets/img/icons/plus.svg"></Button>
 					</div>
