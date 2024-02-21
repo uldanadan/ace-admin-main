@@ -96,7 +96,9 @@ const postProduct = async () => {
 						<div v-for="(center, index) in selectedGameCenters" :key="index">
 							<VueSelect :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" label="name" />
 						</div>
-						<Button @click.prevent="addGameCenter" class="btn-plus"><img src="@/assets/img/icons/plus.svg"></Button>
+						<Button v-if="selectedGameCenters.length < gameCenters.length" @click.prevent="addGameCenter" class="btn-plus">
+							<img src="@/assets/img/icons/plus.svg">
+						</Button>
 					</div>
 				</div>
 				<div class="input-wrapper">
