@@ -5,7 +5,6 @@ import { useProductsStore } from "@/stores/useProductsStore";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
-// import Select from "@/components/UI/Select.vue";
 import FileUploader from "@/components/UI/FileUploader.vue"
 import VueSelect from "vue-select";
 import { useRoute, useRouter } from "vue-router";
@@ -28,6 +27,7 @@ onMounted(async () => {
 		product.value = r.data;
 	});
 	await productsStore.loadCategories();
+	await productsStore.loadGameCenters();
 })
 
 const credentials = ref({
@@ -54,18 +54,6 @@ watchEffect(() => {
 	selectedGameCenters.value = product.value?.availability_in_game_centers
 })
 
-const addGameCenter = () => {
-	selectedGameCenters.value.push({uuid: ''});
-};
-
-const removeGameCenter = (index) => {
-	selectedGameCenters.value.splice(index, 1);
-};
-
-const updateGameCenterOptions = (index) => {
-	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center?.uuid);
-	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center?.uuid));
-};
 
 const updateProduct = async () => {
 	try {
@@ -123,20 +111,15 @@ const deletedProduct = async () => {
 				</div>
 				<div v-if="product.category" class="relative w-[300px]">
 					<label for="" class="mb-2 block">Категория:</label>
-					<VueSelect :options="categories" v-model="selectedCategory" label="name" />
+					<VueSelect :options="categories" v-model="selectedCategory" label="name" :clearable="false" />
 				</div>
 				<div class="relative">
 					<label for="" class="mb-2 block">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
-						<div v-for="(center, index) in selectedGameCenters" :key="index">
-							<VueSelect :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" label="name" />
-						</div>
-						<Button  @click.prevent="addGameCenter" class="btn-plus" >
+						<VueSelect :options="gameCenters" v-model="selectedGameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
+						<Button class="btn-plus">
 							<img src="@/assets/img/icons/plus.svg">
 						</Button>
-<!--						<Button  @click.prevent="removeGameCenter" class="btn-plus"  >-->
-<!--							<img src="@/assets/img/icons/plus.svg" :class="'rotate-45'">-->
-<!--						</Button>-->
 					</div>
 				</div>
 				<div class="input-wrapper">

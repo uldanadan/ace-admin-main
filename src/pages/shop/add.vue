@@ -31,25 +31,12 @@ const gameCenters = computed(() => {
 });
 
 const selectedCategory = ref({uuid: ''});
-const selectedGameCenters = ref([{uuid: ''}]);
+const selectedGameCenters = ref([]);
 
 onMounted(async () => {
 	await productsStore.loadCategories();
 	await productsStore.loadGameCenters();
 });
-
-const addGameCenter = () => {
-	selectedGameCenters.value.push({uuid: ''});
-};
-
-const removeGameCenter = (index) => {
-	selectedGameCenters.value.splice(index, 1);
-};
-
-const updateGameCenterOptions = (index) => {
-	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center?.uuid);
-	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center?.uuid));
-};
 
 const postProduct = async () => {
 	try {
@@ -92,15 +79,13 @@ const postProduct = async () => {
 				</div>
 				<div class="relative w-[300px]">
 					<label for="" class="mb-2 block">Категория:</label>
-					<VueSelect :options="categories" v-model="selectedCategory" label="name" />
+					<VueSelect :options="categories" v-model="selectedCategory" label="name" :clearable="false" />
 				</div>
 				<div class="relative">
 					<label for="" class="mb-2 block">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
-						<div v-for="(center, index) in selectedGameCenters" :key="index">
-							<VueSelect :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" label="name" />
-						</div>
-						<Button v-if="selectedGameCenters.length < gameCenters.length" @click.prevent="addGameCenter" class="btn-plus" aria-expanded="true" >
+						<VueSelect :options="gameCenters" v-model="selectedGameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
+						<Button  class="btn-plus" aria-expanded="true" >
 							<img src="@/assets/img/icons/plus.svg">
 						</Button>
 					</div>
