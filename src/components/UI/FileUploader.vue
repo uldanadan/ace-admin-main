@@ -7,6 +7,10 @@ const emit = defineEmits<{
 	(event: "onFileUploaded", payload: FileInfo): void
 }>()
 
+const props = defineProps<{
+	initialImage?: string;
+}>()
+
 const imageName = ref<string>('');
 
 const onFileChange = async (e) => {
@@ -28,6 +32,8 @@ const onFileChange = async (e) => {
 		</label>
 		<input id="fileInput" type="file" accept="image/*" @change="onFileChange">
 		<span v-if="imageName" class="file-name ml-2">{{ imageName }}</span>
+<!--		<img v-if="imageName" :src="imageName" alt="Uploaded Image" class="ml-2" style="max-width: 100px;">-->
+		<img v-if="props.initialImage" :src="props.initialImage" alt="Uploaded Image" class="ml-2" style="max-width: 100px;">
 	</div>
 </template>
 

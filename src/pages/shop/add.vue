@@ -42,6 +42,10 @@ const addGameCenter = () => {
 	selectedGameCenters.value.push({uuid: ''});
 };
 
+const removeGameCenter = (index) => {
+	selectedGameCenters.value.splice(index, 1);
+};
+
 const updateGameCenterOptions = (index) => {
 	const selectedGameCenterUUIDs = selectedGameCenters.value.map(center => center?.uuid);
 	return gameCenters.value.filter(center => !selectedGameCenterUUIDs.includes(center?.uuid));
@@ -96,7 +100,7 @@ const postProduct = async () => {
 						<div v-for="(center, index) in selectedGameCenters" :key="index">
 							<VueSelect :options="updateGameCenterOptions(index)" v-model="selectedGameCenters[index]" label="name" />
 						</div>
-						<Button v-if="selectedGameCenters.length < gameCenters.length" @click.prevent="addGameCenter" class="btn-plus">
+						<Button v-if="selectedGameCenters.length < gameCenters.length" @click.prevent="addGameCenter" class="btn-plus" aria-expanded="true" >
 							<img src="@/assets/img/icons/plus.svg">
 						</Button>
 					</div>
@@ -115,3 +119,5 @@ const postProduct = async () => {
 		</div>
 	</section>
 </template>
+
+
