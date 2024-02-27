@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { onMounted, computed } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useProductsStore } from "@/stores/useProductsStore";
+import Search from "@/components/UI/SearchBar.vue"
 const productsStore = useProductsStore();
 import { useRouter } from "vue-router";
 
@@ -13,21 +14,34 @@ onMounted(async () => {
 	}
 })
 
+const searchQuery = ref('');
+
 const products = computed(() => {
-	return productsStore.getProducts?.results;
+	return productsStore.getProducts?.results?.filter(product =>
+		Object.entries(product).some(([key, value]) =>
+			typeof value === 'string' && key !== 'uuid' && value.toLowerCase().includes(searchQuery.value.toLowerCase())
+		)
+	);
 })
 
 const goToSlug = product => {
 	router.push({ path: `/shop/${product.uuid}` });
+}
+
+const search = (query: string) => {
+	searchQuery.value = query;
 }
 </script>
 
 <template>
 	<section>
 		<div class="w-container">
-			<Button class="btn-accent">
-				<router-link to="/shop/add">Добавить товар</router-link>
-			</Button>
+			<div>
+				<Search :searchFunction="search" />
+				<Button class="btn-accent">
+					<router-link to="/shop/add">Добавить товар</router-link>
+				</Button>
+			</div>
 			<div class="mx-auto py-8">
 				<div class="table-primary">
 					<table>
