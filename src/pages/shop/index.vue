@@ -2,26 +2,36 @@
 import { ref, onMounted, computed } from "vue";
 import { useProductsStore } from "@/stores/useProductsStore";
 import Search from "@/components/UI/SearchBar.vue"
-const productsStore = useProductsStore();
+import Category from "@/components/UI/Category.vue"
 import { useRouter } from "vue-router";
 
+const productsStore = useProductsStore();
 const router = useRouter();
+
+const searchQuery = ref('');
+const selectedCategory = ref(null);
+
+const categories = computed(() => {
+	return productsStore.getCategories?.results || [];
+});
+
 onMounted(async () => {
 	try {
 		await productsStore.loadProducts();
+		await productsStore.loadCategories();
 	} catch (err) {
 		console.log("Failed loadProducts", err);
 	}
 })
 
-const searchQuery = ref('');
-
 const products = computed(() => {
-	return productsStore.getProducts?.results?.filter(product =>
-		Object.entries(product).some(([key, value]) =>
+	return productsStore.getProducts?.results?.filter(product => {
+		const matchesSearch = Object.entries(product).some(([key, value]) =>
 			typeof value === 'string' && key !== 'uuid' && value.toLowerCase().includes(searchQuery.value.toLowerCase())
-		)
-	);
+		);
+		const matchesCategory = !selectedCategory.value || product.category.name === selectedCategory.value.name;
+		return matchesSearch && matchesCategory;
+	});
 })
 
 const goToSlug = product => {
@@ -31,13 +41,18 @@ const goToSlug = product => {
 const search = (query: string) => {
 	searchQuery.value = query;
 }
+
+const updateCategory = (category) => {
+	selectedCategory.value = category;
+}
 </script>
 
 <template>
 	<section>
 		<div class="w-container">
-			<div>
+			<div class="flex">
 				<Search :searchFunction="search" />
+				<div><Category :options="categories" :updateCategory="updateCategory" /></div>
 				<Button class="btn-accent">
 					<router-link to="/shop/add">Добавить товар</router-link>
 				</Button>
