@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
-import MobileNav from "@/components/MobileNav.vue"
+import { ref, watch } from "vue";
+import MobileNav from "@/components/NavBar/component/MobileNav.vue";
+import SabNav from  "@/components/NavBar/component/SubNav.vue";
 
 const Logo = new URL("/img/icons/logo.svg", import.meta.url).href
 const list = ref([
@@ -56,7 +57,7 @@ watch(
 			<div class="h-full xl:px-20">
 				<div class="flex h-full items-center justify-between">
 					<div class="flex h-full items-center justify-center px-4 xl:px-0">
-						<img src="../assets/img/icons/logo.svg" class="w-28 md:w-36" alt="" />
+						<img src="../../assets/img/icons/logo.svg" class="w-28 md:w-36" alt="" />
 					</div>
 					<nav class="hidden xl:block">
 						<ul class="flex items-center space-x-10">
@@ -80,6 +81,7 @@ watch(
 				</div>
 			</div>
 		</div>
+		<SabNav />
 	</div>
 	<MobileNav :list="list" :isActive="openedMobileNav" @closeMenu="closeMenu" />
 </template>

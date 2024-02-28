@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useProductsStore } from "@/stores/useProductsStore";
-import Search from "@/components/UI/SearchBar.vue"
-import Category from "@/components/UI/Category.vue"
+import Search from "@/components/UI/SearchBar.vue";
+import Category from "@/components/UI/Category.vue";
+import Path from "@/components/UI/Path.vue";
 import { useRouter } from "vue-router";
 
 const productsStore = useProductsStore();
@@ -50,12 +51,11 @@ const updateCategory = (category) => {
 <template>
 	<section>
 		<div class="w-container">
-			<div class="flex">
+			<Path />
+			<div class="flex items-center">
 				<Search :searchFunction="search" />
 				<div><Category :options="categories" :updateCategory="updateCategory" /></div>
-				<Button class="btn-accent">
-					<router-link to="/shop/add">Добавить товар</router-link>
-				</Button>
+				<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
 			</div>
 			<div class="mx-auto py-8">
 				<div class="table-primary">

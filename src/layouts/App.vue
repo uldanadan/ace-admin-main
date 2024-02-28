@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { onMounted } from "vue"
-import Nav from "@/components/Nav.vue"
+import Nav from "@/components/NavBar/Nav.vue"
 
 onMounted(() => {
 	console.log("APP MOUNTED")
