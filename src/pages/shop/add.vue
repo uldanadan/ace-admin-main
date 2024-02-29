@@ -9,6 +9,7 @@ import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
 import VueSelect from "vue-select";
 import FileUploader from "@/components/UI/FileUploader.vue"
+import Breadcrumbs from "../../components/UI/Breadcrumbs.vue"
 
 const router = useRouter();
 const productsStore = useProductsStore();
@@ -25,6 +26,12 @@ const product = ref({
 	category: "",
 	availability_in_game_centers: []
 });
+
+const crumbs = [
+	{ label: 'Магазин' },
+	{ label: 'Товары', route: '/shop' },
+	{ label: 'Добавить товар', route: '/shop/add'}
+];
 
 const categories = computed(() => {
 	return categoryStore.getCategories?.results || [];
@@ -60,6 +67,18 @@ const postProduct = async () => {
 <template>
 	<section>
 		<div class="w-container pb-80">
+			<div class="flex items-center justify-between">
+				<div>
+					<h2>Магазин</h2>
+					<Breadcrumbs :crumbs="crumbs" />
+				</div>
+				<div class="flex space-x-7">
+					<Button class="btn-back">
+						<router-link to="/shop">Назад</router-link>
+					</Button>
+					<Button @click.prevent="postProduct" class="btn-accent">Сохранить</Button>
+				</div>
+			</div>
 			<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
 				<div class="input-wrapper">
 					<label for="">Название товара:</label>
@@ -98,12 +117,6 @@ const postProduct = async () => {
 					<label for="">Изображение:</label>
 					<FileUploader @onFileUploaded="product.thumbnail = $event.uuid" />
 				</div>
-			</div>
-			<div class="mt-4 flex justify-end gap-4">
-				<Button class="btn-back">
-					<router-link to="/shop">Назад</router-link>
-				</Button>
-				<Button @click.prevent="postProduct" class="btn-accent">Сохранить</Button>
 			</div>
 		</div>
 	</section>

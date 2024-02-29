@@ -944,11 +944,6 @@ prettier@^3.0, prettier@^3.2.2:
   resolved "https://registry.npmjs.org/prettier/-/prettier-3.2.5.tgz"
   integrity sha512-3/GWa9aOC0YeD7LUfvOG2NiDyhOWRvt1k+rcKhOuYnMY24iiCphgneUfJDyFXd6rZCAnuLBv6UeAULtrhT/F4A==
 
-primevue@^3.46.0:
-  version "3.48.1"
-  resolved "https://registry.npmjs.org/primevue/-/primevue-3.48.1.tgz"
-  integrity sha512-lyJ+E0ZCv2pR9jIpdPLBysU8zB2hOKrN7q78orloWelPx05zSYoMVKAWaqKTHNpunD52xffjaqovt1y6B/9XoQ==
-
 proxy-from-env@^1.1.0:
   version "1.1.0"
   resolved "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz"
@@ -1260,7 +1255,7 @@ vue@^2.0.0:
     "@vue/compiler-sfc" "2.7.16"
     csstype "^3.1.0"
 
-"vue@^2.6.14 || ^3.3.0", "vue@^2.7.0 || ^3.0.0", vue@^3.0.0, "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.11, vue@>=3.2.0, vue@3.4.19, vue@3.x:
+"vue@^2.6.14 || ^3.3.0", "vue@^2.7.0 || ^3.0.0", "vue@^3.0.0-0 || ^2.6.0", vue@^3.2.0, vue@^3.2.25, vue@^3.3.11, vue@>=3.2.0, vue@3.4.19, vue@3.x:
   version "3.4.19"
   resolved "https://registry.npmjs.org/vue/-/vue-3.4.19.tgz"
   integrity sha512-W/7Fc9KUkajFU8dBeDluM4sRGc/aa4YJnOYck8dkjgZoXtVsn3OeTGni66FV1l3+nvPA7VBFYtPioaGKUmEADw==

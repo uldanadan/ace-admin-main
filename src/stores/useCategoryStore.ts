@@ -2,7 +2,7 @@ import { defineStore } from "pinia"
 import { ref, computed } from "vue"
 import CategoriesDataService from "@/services/CategoriesDataService.ts"
 
-export const useCategoryStore = defineStore("partners", () => {
+export const useCategoryStore = defineStore("categories", () => {
 	const categories = ref();
 
 	const loadCategories = async () => {

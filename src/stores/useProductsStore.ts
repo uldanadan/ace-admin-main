@@ -3,13 +3,13 @@ import { ref, computed } from "vue"
 import type { Product } from "@/types/types"
 import ProductsDataService from "@/services/ProductsDataService"
 export const useProductsStore = defineStore("products", () => {
-	const products = ref()
+	const products = ref<Product[]>([]);
 	const product = ref()
 	//----------------------------------------------------------------------
-	const loadProducts = async () => {
-		const response = await ProductsDataService.getProducts()
-		products.value = response.data
-	}
+	const loadProducts = async (params: Record<string, any> = {}) => {
+		const response = await ProductsDataService.getProducts(params);
+		products.value = response.data;
+	};
 	const loadProduct = async (id: string) => {
 		return await ProductsDataService.getProduct(id);
 	}

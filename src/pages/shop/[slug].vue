@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watchEffect } from "vue";
 import { toast } from "vue3-toastify";
 import { useProductsStore } from "@/stores/useProductsStore";
+import { usePartnersStore } from "@/stores/usePartnersStore";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Textarea from "@/components/UI/Textarea.vue";
@@ -11,6 +12,7 @@ import VueSelect from "vue-select";
 import { useRoute, useRouter } from "vue-router";
 
 const productsStore = useProductsStore();
+const partnersStore = usePartnersStore();
 const categoryStore = useCategoryStore();
 
 const route = useRoute();
@@ -22,7 +24,7 @@ const categories = computed(() => {
 })
 
 const gameCenters = computed(() => {
-	return productsStore.getGameCenters?.results || [];
+	return partnersStore.getGameCenters?.results || [];
 });
 
 onMounted(async () => {
@@ -30,7 +32,7 @@ onMounted(async () => {
 		product.value = r.data;
 	});
 	await categoryStore.loadCategories();
-	await productsStore.loadGameCenters();
+	await partnersStore.loadGameCenters();
 })
 
 const credentials = ref({

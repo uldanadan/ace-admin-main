@@ -1,9 +1,10 @@
 import http from "@/http-common"
-import type { Product } from "@/types/types"
+import type { Product } from "@/types/types";
+import type { GetProductsParams } from "@/types/types";
 
 class ProductsDataService {
-	getProducts() {
-		return http.get(`/admin_panel/products/`)
+	getProducts(params: GetProductsParams = {}) {
+		return http.get("/admin_panel/products/", { params });
 	}
 	getProduct(id: string) {
 		return http.get(`/admin_panel/products/${id}/`)

@@ -1,18 +1,23 @@
 <script setup lang="ts">
-import { ref, onMounted, computed } from "vue";
+import { ref, onMounted, computed, watch } from "vue"
 import { useProductsStore } from "@/stores/useProductsStore";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import Search from "@/components/UI/SearchBar.vue";
 import Category from "@/components/UI/Category.vue";
-import Path from "@/components/UI/Path.vue";
 import { useRouter } from "vue-router";
+import { GetProductsParams } from "./types"
+import Breadcrumbs from "../../components/UI/Breadcrumbs.vue"
 
 const productsStore = useProductsStore();
 const categoryStore = useCategoryStore();
 const router = useRouter();
 
-const searchQuery = ref('');
-const selectedCategory = ref(null);
+const searchParams = ref<GetProductsParams>({});
+
+const crumbs = [
+	{ label: 'Магазин', route: '/shop' },
+	{ label: 'Товары' }
+];
 
 const categories = computed(() => {
 	return categoryStore.getCategories?.results || [];
@@ -28,36 +33,29 @@ onMounted(async () => {
 })
 
 const products = computed(() => {
-	return productsStore.getProducts?.results?.filter(product => {
-		const matchesSearch = Object.entries(product).some(([key, value]) =>
-			typeof value === 'string' && key !== 'uuid' && value.toLowerCase().includes(searchQuery.value.toLowerCase())
-		);
-		const matchesCategory = !selectedCategory.value || product.category.name === selectedCategory.value.name;
-		return matchesSearch && matchesCategory;
-	});
+	return productsStore.getProducts?.results || [];
 })
 
 const goToSlug = product => {
 	router.push({ path: `/shop/${product.uuid}` });
 }
 
-const search = (query: string) => {
-	searchQuery.value = query;
-}
-
-const updateCategory = (category) => {
-	selectedCategory.value = category;
-}
+watch([searchParams.value], () => {
+	productsStore.loadProducts(searchParams.value);
+})
 </script>
 
 <template>
 	<section>
 		<div class="w-container">
 			<div class="flex items-center justify-between">
-				<h2>Магазин</h2>
+				<div>
+					<h2>Магазин</h2>
+					<Breadcrumbs :crumbs="crumbs" />
+				</div>
 				<div class="flex items-center space-x-7">
-					<Search :searchFunction="search" />
-					<div><Category :options="categories" :updateCategory="updateCategory" /></div>
+					<Search :searchFunction="($event) => searchParams.search = $event" />
+					<div><Category :options="categories" :updateCategory="($event) => searchParams.category = $event?.uuid" /></div>
 					<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
 				</div>
 			</div>

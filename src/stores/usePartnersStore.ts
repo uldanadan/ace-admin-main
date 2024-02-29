@@ -1,14 +1,14 @@
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
-import PartnersDataService from "@/services/PartnersDataService.ts"
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import PartnersDataService from "@/services/PartnersDataService.ts";
 
 export const usePartnersStore = defineStore("partners", () => {
 	const computers = ref([])
-	const gameCenters = ref(null)
+	const gameCenters = ref()
 	//---------------------------------------------------------------------------------------
 	const loadGameCenters = async () => {
-		const response = await PartnersDataService.getGameCenters()
-		console.log("game centers " + JSON.stringify(response))
+		const response = await PartnersDataService.getGameCenters();
+		gameCenters.value = response.data;
 	}
 	const loadComputers = async (gameCenter: string, zone: string) => {
 		const response = await PartnersDataService.getComputersFromZone(gameCenter, zone)
