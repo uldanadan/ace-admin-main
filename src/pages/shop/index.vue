@@ -1,25 +1,27 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
 import { useProductsStore } from "@/stores/useProductsStore";
+import { useCategoryStore } from "@/stores/useCategoryStore";
 import Search from "@/components/UI/SearchBar.vue";
 import Category from "@/components/UI/Category.vue";
 import Path from "@/components/UI/Path.vue";
 import { useRouter } from "vue-router";
 
 const productsStore = useProductsStore();
+const categoryStore = useCategoryStore();
 const router = useRouter();
 
 const searchQuery = ref('');
 const selectedCategory = ref(null);
 
 const categories = computed(() => {
-	return productsStore.getCategories?.results || [];
+	return categoryStore.getCategories?.results || [];
 });
 
 onMounted(async () => {
 	try {
 		await productsStore.loadProducts();
-		await productsStore.loadCategories();
+		await categoryStore.loadCategories();
 	} catch (err) {
 		console.log("Failed loadProducts", err);
 	}
@@ -51,11 +53,13 @@ const updateCategory = (category) => {
 <template>
 	<section>
 		<div class="w-container">
-			<Path />
-			<div class="flex items-center">
-				<Search :searchFunction="search" />
-				<div><Category :options="categories" :updateCategory="updateCategory" /></div>
-				<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
+			<div class="flex items-center justify-between">
+				<h2>Магазин</h2>
+				<div class="flex items-center space-x-7">
+					<Search :searchFunction="search" />
+					<div><Category :options="categories" :updateCategory="updateCategory" /></div>
+					<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
+				</div>
 			</div>
 			<div class="mx-auto py-8">
 				<div class="table-primary">

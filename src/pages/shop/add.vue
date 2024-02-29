@@ -2,6 +2,8 @@
 import { computed, onMounted, ref } from "vue"
 import { useRouter } from "vue-router";
 import { useProductsStore } from "@/stores/useProductsStore";
+import { usePartnersStore } from "@/stores/usePartnersStore";
+import { useCategoryStore } from "@/stores/useCategoryStore";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
@@ -10,6 +12,8 @@ import FileUploader from "@/components/UI/FileUploader.vue"
 
 const router = useRouter();
 const productsStore = useProductsStore();
+const partnersStore = usePartnersStore();
+const categoryStore = useCategoryStore();
 
 const product = ref({
 	name: "",
@@ -23,19 +27,19 @@ const product = ref({
 });
 
 const categories = computed(() => {
-	return productsStore.getCategories?.results || [];
+	return categoryStore.getCategories?.results || [];
 });
 
 const gameCenters = computed(() => {
-	return productsStore.getGameCenters?.results || [];
+	return partnersStore.getGameCenters?.results || [];
 });
 
 const selectedCategory = ref({uuid: ''});
 const selectedGameCenters = ref([]);
 
 onMounted(async () => {
-	await productsStore.loadCategories();
-	await productsStore.loadGameCenters();
+	await categoryStore.loadCategories();
+	await partnersStore.loadGameCenters();
 });
 
 const postProduct = async () => {

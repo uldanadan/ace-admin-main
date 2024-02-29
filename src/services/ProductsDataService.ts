@@ -28,9 +28,6 @@ class ProductsDataService {
 	getCategories() {
 		return http.get("/admin_panel/category/")
 	}
-	getGameCenters() {
-		return http.get("/partners/game-centers/")
-	}
 }
 
 export default new ProductsDataService()

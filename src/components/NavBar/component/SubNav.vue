@@ -1,14 +1,26 @@
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router";
+import { useProductsStore } from "@/stores/useProductsStore";
+import { usePartnersStore } from "@/stores/usePartnersStore";
+import GameCenter from "@/components/UI/GameCenter.vue";
 
 const route = useRoute();
+const productsStore = useProductsStore();
+const partnersStore = usePartnersStore();
+
 const currentPath = ref("");
 const SabNavItems = ref([]);
+const selectedGameCenter = ref(null);
 
 const navItems = {
 	"/shop": [
 		{ name: "Товары", link: "/shop" },
+		{ name: "Движение товаров", link: "" },
+		{ name: "Архив", link: "" }
+	],
+	"/shop/add": [
+		{ name: "Товары", link: "/shop/add" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],
@@ -36,6 +48,18 @@ const navItems = {
 	]
 };
 
+const gameCenters = computed(() => {
+	return partnersStore.getGameCenters?.results || [];
+});
+
+onMounted(async () => {
+	await partnersStore.loadGameCenters();
+});
+
+const updateGameCenter = (center) => {
+	selectedGameCenter.value = center;
+}
+
 watch(() => route.path, (newPath) => {
 	currentPath.value = newPath;
 	SabNavItems.value = navItems[newPath] || [];
@@ -44,11 +68,16 @@ watch(() => route.path, (newPath) => {
 
 <template>
 	<div class="bg-brand-gray py-4">
-		<ul class="flex items-center space-x-10 h-full xl:px-20">
-			<li v-for="(item, index) in SabNavItems" :key="index" class="link" :class="{ 'active': index === 0 && currentPath === item.link }">
-				<router-link :to="item.link">{{ item.name }}</router-link>
-			</li>
-		</ul>
+		<div class="flex justify-between items-center h-full xl:px-20">
+			<ul class="flex items-center space-x-10">
+				<li v-for="(item, index) in SabNavItems" :key="index" class="link" :class="{ 'active': index === 0 && currentPath === item.link }">
+					<router-link :to="item.link">{{ item.name }}</router-link>
+				</li>
+			</ul>
+			<div>
+				<GameCenter :options="gameCenters" :updateGameCenter="updateGameCenter" />
+			</div>
+		</div>
 	</div>
 </template>
 
