@@ -10,6 +10,7 @@ import Button from "@/components/UI/Button.vue";
 import FileUploader from "@/components/UI/FileUploader.vue"
 import VueSelect from "vue-select";
 import { useRoute, useRouter } from "vue-router";
+import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 
 const productsStore = useProductsStore();
 const partnersStore = usePartnersStore();
@@ -18,6 +19,12 @@ const categoryStore = useCategoryStore();
 const route = useRoute();
 const router = useRouter();
 const product = ref()
+
+const crumbs = [
+	{ label: 'Магазин' },
+	{ label: 'Товары', route: '/shop' },
+	{ label: 'Изменить товар', route: `/shop/${route.params.slug}`}
+];
 
 const categories = computed(() => {
 	return categoryStore.getCategories?.results;
@@ -94,6 +101,15 @@ const deletedProduct = async () => {
 <template>
 	<section>
 		<div class="w-container pb-80">
+			<div class="flex items-center justify-between">
+				<div>
+					<h2 class="text-4xl font-semibold">Магазин</h2>
+					<Breadcrumbs :crumbs="crumbs" />
+				</div>
+				<div class="flex space-x-7">
+
+				</div>
+			</div>
 			<div v-if="product" class="grid grid-cols-1 gap-5 md:grid-cols-2">
 				<div v-if="product.name" class="input-wrapper">
 					<label for="">Название товара:</label>

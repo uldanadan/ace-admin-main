@@ -7,7 +7,6 @@ export const useUsersStore = defineStore("users", () => {
 	//------------------------------------------------------------------------------
 	const loadUsers = async () => {
 		const response = await UsersDataService.getUsers()
-		console.log("users " + JSON.stringify(response))
 		users.value = response.data
 	}
 	//------------------------------------------------------------------------------

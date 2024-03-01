@@ -15,8 +15,8 @@ const router = useRouter();
 const searchParams = ref<GetProductsParams>({});
 
 const crumbs = [
-	{ label: 'Магазин', route: '/shop' },
-	{ label: 'Товары' }
+	{ label: 'Магазин' },
+	{ label: 'Товары', route: '/shop' }
 ];
 
 const categories = computed(() => {
@@ -49,8 +49,8 @@ watch([searchParams.value], () => {
 	<section>
 		<div class="w-container">
 			<div class="flex items-center justify-between">
-				<div>
-					<h2>Магазин</h2>
+				<div class="text-second-dark">
+					<h2 class="text-4xl font-semibold">Магазин</h2>
 					<Breadcrumbs :crumbs="crumbs" />
 				</div>
 				<div class="flex items-center space-x-7">

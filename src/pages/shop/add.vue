@@ -9,7 +9,7 @@ import Textarea from "@/components/UI/Textarea.vue";
 import Button from "@/components/UI/Button.vue";
 import VueSelect from "vue-select";
 import FileUploader from "@/components/UI/FileUploader.vue"
-import Breadcrumbs from "../../components/UI/Breadcrumbs.vue"
+import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 
 const router = useRouter();
 const productsStore = useProductsStore();
@@ -69,52 +69,52 @@ const postProduct = async () => {
 		<div class="w-container pb-80">
 			<div class="flex items-center justify-between">
 				<div>
-					<h2>Магазин</h2>
+					<h2 class="text-4xl font-semibold">Магазин</h2>
 					<Breadcrumbs :crumbs="crumbs" />
 				</div>
 				<div class="flex space-x-7">
-					<Button class="btn-back">
-						<router-link to="/shop">Назад</router-link>
-					</Button>
+					<router-link to="/shop">
+						<Button class="btn-back">Назад</Button>
+					</router-link>
 					<Button @click.prevent="postProduct" class="btn-accent">Сохранить</Button>
 				</div>
 			</div>
-			<div class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			<div class="grid grid-cols-1 gap-5 md:grid-cols-2 py-8">
 				<div class="input-wrapper">
-					<label for="">Название товара:</label>
-					<InputPrimary class="input-primary" type="text" name="name" label="" v-model="product.name" />
+					<label for="" class="label">Название товара:</label>
+					<InputPrimary v-model="product.name"  class="input-primary" type="text" name="name" label=""/>
 				</div>
 				<div class="input-wrapper">
-					<label for="">Артикул:</label>
-					<InputPrimary class="input-primary" type="text" name="article" label="" v-model="product.article" />
+					<label for="" class="label">Артикул:</label>
+					<InputPrimary v-model="product.article" class="input-primary" type="text" name="article" label="" />
 				</div>
 				<div class="input-wrapper">
-					<label for="">Цена:</label>
-					<InputPrimary class="input-primary" type="number" name="price" label="" v-model="product.price" />
+					<label for="" class="label">Цена:</label>
+					<InputPrimary v-model="product.price" class="input-primary" type="number" name="price" label="" />
 				</div>
 				<div class="input-wrapper">
-					<label for="">Количество:</label>
-					<InputPrimary class="input-primary" type="number" name="amount" label="" v-model="product.amount" />
+					<label for="" class="label">Количество:</label>
+					<InputPrimary v-model="product.amount" class="input-primary" type="number" name="amount" label="" />
 				</div>
 				<div class="col-span-1 md:col-span-2">
-					<label for="">Описание товара:</label>
-					<Textarea :cols="20" :rows="5" name="description" label="Введите описание продукта" v-model="product.description" />
+					<label for="" class="label">Описание товара:</label>
+					<Textarea v-model="product.description" :cols="20" :rows="5" name="description" label="Введите описание продукта" />
 				</div>
 				<div class="relative w-[300px]">
-					<label for="" class="mb-2 block">Категория:</label>
-					<VueSelect :options="categories" v-model="selectedCategory" label="name" :clearable="false" />
+					<label for="" class="mb-2 block label">Категория:</label>
+					<VueSelect v-model="selectedCategory" :options="categories" label="name" :clearable="false" />
 				</div>
 				<div class="relative">
-					<label for="" class="mb-2 block">Клуб:</label>
+					<label for="" class="mb-2 block label">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
-						<VueSelect :options="gameCenters" v-model="selectedGameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
+						<VueSelect v-model="selectedGameCenters" :options="gameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
 						<Button  class="btn-plus" aria-expanded="true" >
 							<img src="@/assets/img/icons/plus.svg">
 						</Button>
 					</div>
 				</div>
 				<div class="input-wrapper">
-					<label for="">Изображение:</label>
+					<label for="" class="label">Изображение:</label>
 					<FileUploader @onFileUploaded="product.thumbnail = $event.uuid" />
 				</div>
 			</div>
@@ -122,4 +122,8 @@ const postProduct = async () => {
 	</section>
 </template>
 
-
+<style lang="scss" scoped>
+.label {
+	@apply text-second-dark font-semibold text-base	;
+}
+</style>

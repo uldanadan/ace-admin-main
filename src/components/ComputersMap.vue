@@ -8,7 +8,6 @@ const partnersStore = usePartnersStore();
 const emit = defineEmits(["openSidebar"]);
 onMounted(async () => {
 	await partnersStore.loadComputers("f49dcc25-9428-4e6b-984e-879b618c32e5", "7e39c974-960e-4581-b78c-e17719e24a4b");
-	console.log(computers.value);
 	computers.value.forEach(item => {
 		loadedCoordinates.value.push({ x: item.map_x, y: item.map_y });
 	})

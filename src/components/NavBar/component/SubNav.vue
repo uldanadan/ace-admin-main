@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue"
 import { useRoute } from "vue-router";
-import { useProductsStore } from "@/stores/useProductsStore";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import GameCenter from "@/components/UI/GameCenter.vue";
 
 const route = useRoute();
-const productsStore = useProductsStore();
 const partnersStore = usePartnersStore();
 
 const currentPath = ref("");
@@ -21,6 +19,11 @@ const navItems = {
 	],
 	"/shop/add": [
 		{ name: "Товары", link: "/shop/add" },
+		{ name: "Движение товаров", link: "" },
+		{ name: "Архив", link: "" }
+	],
+	"/shop/:slug": (slug) => [
+		{ name: "Товары", link: `/shop/${slug}` },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],
@@ -54,23 +57,37 @@ const gameCenters = computed(() => {
 
 onMounted(async () => {
 	await partnersStore.loadGameCenters();
+	console.log(route.params.slug)
 });
 
 const updateGameCenter = (center) => {
 	selectedGameCenter.value = center;
 }
 
-watch(() => route.path, (newPath) => {
-	currentPath.value = newPath;
-	SabNavItems.value = navItems[newPath] || [];
-}, { immediate: true });
+const isActive = (routePath, itemRoute) => {
+	return routePath === itemRoute;
+}
+
+watch(
+	() => route.path,
+	(newValue, oldValue) => {
+		if (newValue.includes("/shop/")) {
+			const slug = newValue.split("/").pop();
+			SabNavItems.value = navItems["/shop/:slug"](slug);
+		} else {
+			SabNavItems.value = navItems[newValue] || [];
+		}
+	},
+	{ immediate: true }
+);
+
 </script>
 
 <template>
 	<div class="bg-brand-gray py-4">
 		<div class="flex justify-between items-center h-full xl:px-20">
 			<ul class="flex items-center space-x-10">
-				<li v-for="(item, index) in SabNavItems" :key="index" class="link" :class="{ 'active': index === 0 && currentPath === item.link }">
+				<li v-for="(item, index) in SabNavItems" :key="index" class="link" :class="{ 'active': isActive(route.path, item.link) }">
 					<router-link :to="item.link">{{ item.name }}</router-link>
 				</li>
 			</ul>

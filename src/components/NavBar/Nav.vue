@@ -2,7 +2,9 @@
 import { ref, watch } from "vue";
 import MobileNav from "@/components/NavBar/component/MobileNav.vue";
 import SabNav from  "@/components/NavBar/component/SubNav.vue";
+import { useRoute } from "vue-router"
 
+const route = useRoute();
 const Logo = new URL("/img/icons/logo.svg", import.meta.url).href
 const list = ref([
 	{
@@ -31,6 +33,7 @@ const list = ref([
 		link: ""
 	}
 ])
+
 const openedMobileNav = ref<boolean>(false)
 
 const closeMenu = (value: boolean) => {
@@ -52,7 +55,7 @@ watch(
 </script>
 
 <template>
-	<div class="relative mb-5 xl:mb-10">
+	<div class="relative mb-8">
 		<div class="h-14 border-b border-brand-line bg-gradient-to-r from-brand-secondary to-brand-primary md:h-16">
 			<div class="h-full xl:px-20">
 				<div class="flex h-full items-center justify-between">
