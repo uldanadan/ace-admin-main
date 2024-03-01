@@ -107,35 +107,36 @@ const deletedProduct = async () => {
 					<Breadcrumbs :crumbs="crumbs" />
 				</div>
 				<div class="flex space-x-7">
-
+					<Button @click.prevent="deletedProduct" class="btn-delete">Удалить</Button>
+					<Button @click.prevent="updateProduct" class="btn-accent">Сохранить</Button>
 				</div>
 			</div>
-			<div v-if="product" class="grid grid-cols-1 gap-5 md:grid-cols-2">
+			<div v-if="product" class="grid grid-cols-1 gap-5 md:grid-cols-2 py-8">
 				<div v-if="product.name" class="input-wrapper">
-					<label for="">Название товара:</label>
+					<label for="" class="label">Название товара:</label>
 					<InputPrimary v-model="credentials.name" class="input-primary" type="text" name="name" label="" />
 				</div>
 				<div v-if="product.article" class="input-wrapper">
-					<label for="">Артикул:</label>
+					<label for="" class="label">Артикул:</label>
 					<InputPrimary v-model="credentials.article" class="input-primary" type="text" name="name" label="" />
 				</div>
 				<div v-if="product.price != null" class="input-wrapper">
-					<label for="">Цена:</label>
+					<label for="" class="label">Цена:</label>
 					<InputPrimary v-model="credentials.price" class="input-primary" type="number" name="name" label="" />
 				</div>
 				<div v-if="product.amount" class="input-wrapper">
-					<label for="">Кол-во:</label>
+					<label for="" class="label">Кол-во:</label>
 					<InputPrimary v-model="credentials.amount" class="input-primary" type="text" name="name" label="" />
 				</div>
 				<div class="col-span-1 md:col-span-2">
 					<Textarea v-model="credentials.description" :cols="20" :rows="5" name="description" label="Введите описание продукта" />
 				</div>
 				<div v-if="product.category" class="relative w-[300px]">
-					<label for="" class="mb-2 block">Категория:</label>
+					<label for="" class="mb-2 block label">Категория:</label>
 					<VueSelect :options="categories" v-model="selectedCategory" label="name" :clearable="false" />
 				</div>
 				<div class="relative">
-					<label for="" class="mb-2 block">Клуб:</label>
+					<label for="" class="mb-2 block label">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
 						<VueSelect :options="gameCenters" v-model="selectedGameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
 						<Button class="btn-plus">
@@ -144,13 +145,9 @@ const deletedProduct = async () => {
 					</div>
 				</div>
 				<div class="input-wrapper">
-					<label for="">Изображение:</label>
+					<label for="" class="label">Изображение:</label>
 					<FileUploader :initialImage="product.thumbnail.image" @onFileUploaded="product.thumbnail = $event.uuid" />
 				</div>
-			</div>
-			<div class="mt-4 flex justify-end gap-4">
-				<Button @click.prevent="deletedProduct" class="btn-delete">Удалить</Button>
-				<Button @click.prevent="updateProduct" class="btn-accent">Сохранить</Button>
 			</div>
 		</div>
 	</section>

@@ -122,7 +122,7 @@ const postProduct = async () => {
 	</section>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .label {
 	@apply text-second-dark font-semibold text-base	;
 }
