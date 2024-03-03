@@ -25,3 +25,13 @@ export interface FileInfo {
 	updated: Date;
 	uuid: string;
 }
+export interface GetParams {
+	category?: string | null;
+	article?: string | null;
+	availability_in_game_centers?: string | null;
+	ordering?: string | null;
+	search?: string | null;
+	page?: number | null;
+	email?: string | null;
+	is_staff?: boolean;
+}

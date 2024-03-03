@@ -28,9 +28,9 @@ const product = ref({
 });
 
 const crumbs = [
-	{ label: 'Магазин' },
+	{ label: 'Магазин', route: '/shop' },
 	{ label: 'Товары', route: '/shop' },
-	{ label: 'Добавить товар', route: '/shop/add'}
+	{ label: 'Добавить товар'}
 ];
 
 const categories = computed(() => {

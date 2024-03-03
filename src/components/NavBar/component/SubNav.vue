@@ -9,7 +9,6 @@ const partnersStore = usePartnersStore();
 
 const currentPath = ref("");
 const SabNavItems = ref([]);
-const selectedGameCenter = ref(null);
 
 const navItems = {
 	"/shop": [
@@ -60,10 +59,6 @@ onMounted(async () => {
 	console.log(route.params.slug)
 });
 
-const updateGameCenter = (center) => {
-	selectedGameCenter.value = center;
-}
-
 const isActive = (routePath, itemRoute) => {
 	return routePath === itemRoute;
 }
@@ -92,7 +87,7 @@ watch(
 				</li>
 			</ul>
 			<div>
-				<GameCenter :options="gameCenters" :updateGameCenter="updateGameCenter" />
+				<GameCenter :options="gameCenters" />
 			</div>
 		</div>
 	</div>

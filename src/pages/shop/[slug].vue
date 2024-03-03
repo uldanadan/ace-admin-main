@@ -21,9 +21,9 @@ const router = useRouter();
 const product = ref()
 
 const crumbs = [
-	{ label: 'Магазин' },
+	{ label: 'Магазин', route: '/shop' },
 	{ label: 'Товары', route: '/shop' },
-	{ label: 'Изменить товар', route: `/shop/${route.params.slug}`}
+	{ label: 'Изменить товар'}
 ];
 
 const categories = computed(() => {

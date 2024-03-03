@@ -1,7 +1,8 @@
-import { defineStore } from "pinia"
-import { ref, computed } from "vue"
-import type { Product } from "@/types/types"
-import ProductsDataService from "@/services/ProductsDataService"
+import { defineStore } from "pinia";
+import { ref, computed } from "vue";
+import type { Product } from "@/types/types";
+import ProductsDataService from "@/services/ProductsDataService";
+
 export const useProductsStore = defineStore("products", () => {
 	const products = ref<Product[]>([]);
 	const product = ref()

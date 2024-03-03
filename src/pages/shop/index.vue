@@ -7,16 +7,18 @@ import Category from "@/components/UI/Category.vue";
 import { useRouter } from "vue-router";
 import { GetProductsParams } from "./types"
 import Breadcrumbs from "../../components/UI/Breadcrumbs.vue"
+import { usePartnersStore } from "@/stores/usePartnersStore";
 
 const productsStore = useProductsStore();
 const categoryStore = useCategoryStore();
+const partnersStore = usePartnersStore();
 const router = useRouter();
 
-const searchParams = ref<GetProductsParams>({});
+const searchParams = ref<GetProductsParams>({availability_in_game_centers: partnersStore.getSelectedGameCenter?.uuid});
 
 const crumbs = [
-	{ label: 'Магазин' },
-	{ label: 'Товары', route: '/shop' }
+	{ label: 'Магазин', route: '/shop' },
+	{ label: 'Товары' }
 ];
 
 const categories = computed(() => {
@@ -25,7 +27,7 @@ const categories = computed(() => {
 
 onMounted(async () => {
 	try {
-		await productsStore.loadProducts();
+		await productsStore.loadProducts(searchParams.value);
 		await categoryStore.loadCategories();
 	} catch (err) {
 		console.log("Failed loadProducts", err);

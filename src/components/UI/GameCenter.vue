@@ -1,24 +1,31 @@
 <script setup lang="ts">
-import { ref, defineProps } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue"
 
 const props = defineProps({
 	options: {
 		type: Array
-	},
-	updateGameCenter: {
-		type: Function
 	}
 })
 
-const selectedGameCenter = ref('');
 const selectedOption =  ref(null);
 
-const filterByGameCenter = (center) => {
-	selectedGameCenter.value = center;
+const filterByGameCenter = (center?) => {
 	selectedOption.value = center;
-	props.updateGameCenter(center);
+	if (center) {
+		localStorage.setItem('selectedGameCenter', JSON.stringify(center));
+	} else {
+		localStorage.removeItem('selectedGameCenter');
+	}
+	window.location.reload();
 }
+
+onMounted(() => {
+	const storedGameCenter = localStorage.getItem('selectedGameCenter');
+	if (storedGameCenter) {
+		selectedOption.value = JSON.parse(storedGameCenter);
+	}
+});
 </script>
 
 <template>
@@ -29,10 +36,10 @@ const filterByGameCenter = (center) => {
 				<img src="../../assets/img/icons/down-center.svg">
 			</ListboxButton>
 			<ListboxOptions class="options">
-				<ListboxOption :value="null" class="options__item text-gray-500" @click="filterByGameCenter(null)" :class="{ 'bg-brand-accent text-white': selectedCategory === null || selectedOption === null }">
+				<ListboxOption :value="''" class="options__item text-gray-500" @click="filterByGameCenter()" :class="{ 'bg-brand-accent text-white': !selectedOption }">
 					Все клубы
 				</ListboxOption>
-				<ListboxOption v-for="(option, index) in options" :key="index" :value="option" class="options__item text-gray-500" @click="filterByGameCenter(option)" :class="{ 'bg-brand-accent text-white': selectedOption === option }">
+				<ListboxOption v-for="(option, index) in options" :key="index" :value="option" class="options__item text-gray-500" @click="filterByGameCenter(option)" :class="{ 'bg-brand-accent text-white': selectedOption?.uuid === option.uuid }">
 					{{ option.name }}
 				</ListboxOption>
 			</ListboxOptions>
