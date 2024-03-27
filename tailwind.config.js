@@ -15,7 +15,11 @@ export default {
 				"brand-accent": "#9475ED",
 				"brand-primary": "#351137",
 				"brand-secondary": "#113646",
-				"second-dark": "#2A2A32"
+				"second-dark": "#2A2A32",
+				"brand-yellow": "#FFC700",
+				"brand-blue": "#00A3FF",
+				"brand-dark-blue": "#181C32",
+				"brand-border": "#FFFFFF80"
 			},
 			transitionTimingFunction: {
 				"in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",

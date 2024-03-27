@@ -66,7 +66,7 @@ const postProduct = async () => {
 
 <template>
 	<section>
-		<div class="w-container pb-80">
+		<div class="w-container">
 			<div class="flex items-center justify-between">
 				<div>
 					<h2 class="text-4xl font-semibold">Магазин</h2>

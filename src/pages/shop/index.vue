@@ -6,8 +6,9 @@ import Search from "@/components/UI/SearchBar.vue";
 import Category from "@/components/UI/Category.vue";
 import { useRouter } from "vue-router";
 import { GetProductsParams } from "./types"
-import Breadcrumbs from "../../components/UI/Breadcrumbs.vue"
+import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
 import { usePartnersStore } from "@/stores/usePartnersStore";
+import Pagination from '@/components/UI/Pagination.vue';
 
 const productsStore = useProductsStore();
 const categoryStore = useCategoryStore();
@@ -114,8 +115,11 @@ watch([searchParams.value], () => {
 									</div>
 								</td>
 								<td>
-									<div>
-										<p>{{ product.availability_in_game_centers.length }}</p>
+									<div class="flex items-center">
+										<template v-for="(center, index) in product.availability_in_game_centers">
+											<p v-if="index < 2" class="relative rounded-full h-10 w-10 flex items-center justify-center text-white text-sm font-bold border-[1.5px] border-brand-border" :class="index < 1 ? 'bg-brand-yellow' : 'bg-brand-blue right-[8px]'">{{ center.name[0].toUpperCase() }}</p>
+											<p v-else-if="index === 2" class="relative right-[16px] rounded-full h-10 w-10 flex items-center justify-center bg-brand-dark-blue text-white text-sm font-bold border-[1.5px] border-brand-border">+{{product.availability_in_game_centers.length - 2}}</p>
+										</template>
 									</div>
 								</td>
 							</tr>
@@ -123,6 +127,7 @@ watch([searchParams.value], () => {
 					</table>
 				</div>
 			</div>
+<!--			<Pagination />-->
 		</div>
 	</section>
 </template>

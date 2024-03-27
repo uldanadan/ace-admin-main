@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from "vue"
-import InputPrimary from "@/components/UI/InputPrimary.vue"
-import Close from "@/components/icons/Close.vue"
-import Button from "@/components/UI/Button.vue"
+import { ref, defineProps } from "vue";
+import InputPrimary from "@/components/UI/InputPrimary.vue";
+import Close from "@/components/icons/Close.vue";
+import Button from "@/components/UI/Button.vue";
 
 defineProps({
 	opened: {

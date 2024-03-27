@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, watch } from "vue"
+import { ref, watch, defineProps } from "vue"
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue"
 
 const props = defineProps({

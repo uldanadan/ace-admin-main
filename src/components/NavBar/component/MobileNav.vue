@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { defineProps } from "vue"
 import Close from "@/components/icons/Close.vue"
 
 defineProps<{

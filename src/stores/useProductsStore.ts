@@ -2,14 +2,18 @@ import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import type { Product } from "@/types/types";
 import ProductsDataService from "@/services/ProductsDataService";
+import usePaginationStore from '@/stores/usePaginationStore';
 
 export const useProductsStore = defineStore("products", () => {
 	const products = ref<Product[]>([]);
-	const product = ref()
+	const product = ref();
+	const paginationStore = usePaginationStore();
 	//----------------------------------------------------------------------
 	const loadProducts = async (params: Record<string, any> = {}) => {
-		const response = await ProductsDataService.getProducts(params);
+		const page = params.page || 1;
+		const response = await ProductsDataService.getProducts(params, page);
 		products.value = response.data;
+		paginationStore.updatePagination(response.data.count);
 	};
 	const loadProduct = async (id: string) => {
 		return await ProductsDataService.getProduct(id);

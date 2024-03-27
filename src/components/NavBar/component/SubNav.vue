@@ -7,7 +7,6 @@ import GameCenter from "@/components/UI/GameCenter.vue";
 const route = useRoute();
 const partnersStore = usePartnersStore();
 
-const currentPath = ref("");
 const SabNavItems = ref([]);
 
 const navItems = {
