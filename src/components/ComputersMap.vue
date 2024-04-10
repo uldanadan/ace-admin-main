@@ -10,6 +10,7 @@ const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 
 const emit = defineEmits(["openSidebar"]);
 onMounted(async () => {
+	await loadComputers()
 })
 
 const loadComputers = async () => {
@@ -61,10 +62,16 @@ watchEffect(() => {
 	coordinates.value.y = debouncedY.value;
 })
 
-watch([gameCenters], async () => {
-	if (gameCenters.value.length) await loadComputers();
+watch([gameCenters, selectedGameCenterUuid.value], () => {
+	if (gameCenters.value.length)  loadComputers();
 })
 
+watch(
+	() => selectedGameCenterUuid.value,
+	(newValue, oldValue) => {
+		selectedGameCenterUuid.value = newValue;
+	}
+);
 const handleMap = e => {
 	const map = document.getElementById("map")
 	if (map) {
