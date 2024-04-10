@@ -13,9 +13,8 @@ export const usePartnersStore = defineStore("partners", () => {
 	}
 	const loadComputers = async (gameCenter: string, zone: string) => {
 		const response = await PartnersDataService.getComputersFromZone(gameCenter, zone);
-		computers.value = response;
+		computers.value = response.data;
 	}
-
 	const getComputers = computed(() => {
 		return computers.value;
 	})

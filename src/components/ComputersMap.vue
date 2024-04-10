@@ -3,19 +3,47 @@ import MapItem from "@/components/MapItem.vue";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
+import http from "@/http-common";
 
 const partnersStore = usePartnersStore();
+const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
+
 const emit = defineEmits(["openSidebar"]);
 onMounted(async () => {
-	await partnersStore.loadComputers("f49dcc25-9428-4e6b-984e-879b618c32e5", "7e39c974-960e-4581-b78c-e17719e24a4b");
-	computers.value.forEach(item => {
-		loadedCoordinates.value.push({ x: item.map_x, y: item.map_y });
-	})
 })
 
+const loadComputers = async () => {
+	const queries = [];
+	const allComputers = [];
+	for (const gameCenter of gameCenters.value) {
+		const shouldLoad = !selectedGameCenterUuid.value || gameCenter.uuid === selectedGameCenterUuid.value;
+		if (shouldLoad) {
+			for (const zone of gameCenter.zones) {
+				queries.push(http.get(`/partners/game-centers/${gameCenter.uuid}/zones/${zone.uuid}/computers/`));
+			}
+		}
+	}
+	if (queries?.length) {
+		await Promise.all(queries).then(r => {
+			r.forEach(comp => {
+				allComputers.push(...comp.data);
+				comp.data?.forEach(d => {
+					loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
+				})
+			})
+			partnersStore.computers = allComputers;
+		})
+	}
+}
+
 const computers = computed(() => {
-	return partnersStore.getComputers.data;
-})
+	return partnersStore.getComputers;
+});
+
+const gameCenters = computed(() => {
+	return partnersStore.getGameCenters?.results || [];
+});
+
 const loadedCoordinates = ref([]);
 
 const map_x = ref();
@@ -27,10 +55,16 @@ const coordinates = ref({
 	x: "",
 	y: ""
 })
+
 watchEffect(() => {
 	coordinates.value.x = debouncedX.value;
 	coordinates.value.y = debouncedY.value;
 })
+
+watch([gameCenters], async () => {
+	if (gameCenters.value.length) await loadComputers();
+})
+
 const handleMap = e => {
 	const map = document.getElementById("map")
 	if (map) {
@@ -124,7 +158,6 @@ watch(
 	min-height: 100%;
 	padding-bottom: calc(15rem + 1px);
 	margin: 1rem auto 0;
-	position: relative;
 	--g-workstation-map-grid-background: linear-gradient(90deg, #d1d5db, transparent 1px), linear-gradient(180deg, #d1d5db, transparent 1px);
 }
 </style>

@@ -13,7 +13,7 @@ export const useProductsStore = defineStore("products", () => {
 		const page = params.page || 1;
 		const response = await ProductsDataService.getProducts(params, page);
 		products.value = response.data;
-		paginationStore.updatePagination(response.data.count);
+		// paginationStore.updatePagination(response.data.count);
 	};
 	const loadProduct = async (id: string) => {
 		return await ProductsDataService.getProduct(id);

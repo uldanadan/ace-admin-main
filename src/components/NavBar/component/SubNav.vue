@@ -45,7 +45,8 @@ const navItems = {
 		{ name: "Весь контент", link: "" }
 	],
 	"/": [
-		{ name: "Технический режим", link: "/" }
+		{ name: "Режим управления", link: "/" },
+		{ name: "Технический режим", link: "" }
 	]
 };
 
@@ -55,7 +56,6 @@ const gameCenters = computed(() => {
 
 onMounted(async () => {
 	await partnersStore.loadGameCenters();
-	console.log(route.params.slug)
 });
 
 const isActive = (routePath, itemRoute) => {

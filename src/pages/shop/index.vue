@@ -5,8 +5,8 @@ import { useCategoryStore } from "@/stores/useCategoryStore";
 import Search from "@/components/UI/SearchBar.vue";
 import Category from "@/components/UI/Category.vue";
 import { useRouter } from "vue-router";
-import { GetProductsParams } from "./types"
-import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
+import { GetProductsParams } from "./types";
+import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import Pagination from '@/components/UI/Pagination.vue';
 
