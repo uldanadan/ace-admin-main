@@ -4,10 +4,11 @@ import SidebarAddComputer from "@/components/SidebarAddComputer.vue";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
 
 import { ref } from "vue"
+import Button from "../components/UI/Button.vue"
 const coordinates = ref({
 	x: "",
 	y: ""
-})
+});
 const openedSidebar = ref(false);
 
 const crumbs = [
@@ -16,12 +17,12 @@ const crumbs = [
 ];
 
 const openSidebar = (x: string, y: string) => {
-	coordinates.value.x = x
-	coordinates.value.y = y
-	openedSidebar.value = true
+	coordinates.value.x = x;
+	coordinates.value.y = y;
+	openedSidebar.value = true;
 }
 const closeSidebar = () => {
-	openedSidebar.value = false
+	openedSidebar.value = false;
 }
 </script>
 
@@ -35,6 +36,7 @@ const closeSidebar = () => {
 					<Breadcrumbs :crumbs="crumbs" />
 				</div>
 				<div class="flex items-center space-x-7">
+					<router-link to=""><Button class="btn-back">Выбрать все</Button></router-link>
 					<router-link to="/"><Button class="btn-accent">Добавить ПК</Button></router-link>
 				</div>
 			</div>

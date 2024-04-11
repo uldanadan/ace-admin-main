@@ -8,7 +8,7 @@ const props = defineProps<{
 }>()
 
 const handleMove = () => {
-	console.log("asdasd")
+	console.log("asdasd");
 }
 onMounted(() => {})
 </script>
