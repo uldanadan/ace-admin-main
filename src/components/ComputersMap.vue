@@ -7,8 +7,8 @@ import http from "@/http-common";
 
 const partnersStore = usePartnersStore();
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
-
 const emit = defineEmits(["openSidebar"]);
+
 onMounted(async () => {
 	await loadComputers()
 })
@@ -82,7 +82,16 @@ const handleMap = e => {
 		const resultY = Math.ceil((boxPosition.height - (boxPosition.height - clickY)) / 80);
 		map_x.value = resultX;
 		map_y.value = resultY;
-		emit("openSidebar", coordinates.value.x, coordinates.value.y);
+
+		const computerExists = computers.value.some(computer => {
+			return computer.map_x === resultX && computer.map_y === resultY;
+		});
+
+		if (!computerExists) {
+			map_x.value = resultX;
+			map_y.value = resultY;
+			emit("openSidebar", resultX, resultY, computers);
+		}
 	}
 }
 const moveMap = e => {
@@ -114,6 +123,7 @@ const removeMapItem = () => {
 watch(
 	coordinates,
 	newValue => {
+		console.log("x:", newValue.x, "y:", newValue.y)
 		const matchingCoordinate = loadedCoordinates.value.find(item => {
 			return item.x === newValue.x && item.y === newValue.y;
 		})

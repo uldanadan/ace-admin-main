@@ -1,7 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import PartnersDataService from "@/services/PartnersDataService.ts";
-import { GetParams } from "@/types/types"
+import { GetParams, Computer } from "@/types/types"
 
 export const usePartnersStore = defineStore("partners", () => {
 	const computers = ref([]);
@@ -15,6 +15,9 @@ export const usePartnersStore = defineStore("partners", () => {
 		const response = await PartnersDataService.getComputersFromZone(gameCenter, zone);
 		computers.value = response.data;
 	}
+	const postComputer = async (data: Computer) => {
+		await PartnersDataService.postComputer(data);
+	}
 	const getComputers = computed(() => {
 		return computers.value;
 	})
@@ -25,5 +28,5 @@ export const usePartnersStore = defineStore("partners", () => {
 		const storage = localStorage.getItem('selectedGameCenter');
 		return storage ? JSON.parse(storage) : undefined;
 	})
-	return { computers, getComputers, getSelectedGameCenter, loadComputers, loadGameCenters, gameCenters, getGameCenters }
+	return { computers, getComputers, getSelectedGameCenter, loadComputers, postComputer, loadGameCenters, gameCenters, getGameCenters }
 })

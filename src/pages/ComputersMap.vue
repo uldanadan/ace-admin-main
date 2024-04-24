@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import ComputersMap from "@/components/ComputersMap.vue";
 import SidebarAddComputer from "@/components/SidebarAddComputer.vue";
+import MapItem from "@/components/MapItem.vue";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
 
 import { ref } from "vue"
@@ -10,17 +11,21 @@ const coordinates = ref({
 	y: ""
 });
 const openedSidebar = ref(false);
+const selectedComputer = ref(null);
 
 const crumbs = [
 	{ label: 'Карта клуба', route: '/' },
-	{ label: 'Режим управления' }
+	{ label: 'Технический режим' }
 ];
 
-const openSidebar = (x: string, y: string) => {
+const openSidebar = (x: string, y: string, computer) => {
 	coordinates.value.x = x;
 	coordinates.value.y = y;
+	selectedComputer.value = computer;
 	openedSidebar.value = true;
+	console.log(coordinates.value)
 }
+
 const closeSidebar = () => {
 	openedSidebar.value = false;
 }
@@ -28,7 +33,7 @@ const closeSidebar = () => {
 
 <template>
 	<section>
-		<SidebarAddComputer @close-sidebar="closeSidebar" :coordinates="coordinates" :opened="openedSidebar" />
+		<SidebarAddComputer @close-sidebar="closeSidebar" :coordinates="coordinates" :selectedComputer="selectedComputer" :opened="openedSidebar" />
 		<div class="w-container">
 			<div class="flex items-center justify-between">
 				<div class="text-second-dark">
@@ -37,10 +42,10 @@ const closeSidebar = () => {
 				</div>
 				<div class="flex items-center space-x-7">
 					<router-link to=""><Button class="btn-back">Выбрать все</Button></router-link>
-					<router-link to="/"><Button class="btn-accent">Добавить ПК</Button></router-link>
+<!--					<router-link to="/"><Button class="btn-accent" @click="openSidebar('', '')">Добавить ПК</Button></router-link>-->
 				</div>
 			</div>
-			<ComputersMap @open-sidebar="openSidebar" />
+			<ComputersMap @openSidebar="openSidebar" />
 		</div>
 	</section>
 </template>

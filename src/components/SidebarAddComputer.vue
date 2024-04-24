@@ -1,34 +1,75 @@
 <script setup lang="ts">
-import { ref, defineProps } from "vue";
+import { ref, defineProps, computed, watch, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
+import { usePartnersStore } from "@/stores/usePartnersStore";
+import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
+import VueSelect from "vue-select";
 
-defineProps({
-	opened: {
-		type: Boolean,
-		default: false
-	},
-	coordinates: {
-		type: String
-	}
-})
-const emit = defineEmits(["closeSidebar"])
+const props = defineProps({
+	opened: Boolean,
+	coordinates: Object,
+	selectedComputer: Object,
+});
+
+const router = useRouter();
+const partnersStore = usePartnersStore();
+const adminPanelsStore = useAdminPanelsStore();
+const emit = defineEmits(["closeSidebar"]);
+
+const selectedZones = ref({uuid: ''});
 
 const close = () => {
 	emit("closeSidebar", false)
 }
-const place_number = ref()
-const zone = ref()
-const ip_address = ref()
-const mac_address = ref()
 
-const data = ref({
-	place_number: place_number.value,
-	zone: zone.value,
-	ip_address: ip_address,
-	mac_address: mac_address.value
+const computer = ref({
+	number: null,
+	ip_address: "",
+	mac_address: ""
 })
+
+const zones = computed(() => adminPanelsStore.getZone);
+
+const getZoneOptions = (zones) => {
+	if (!zones) return [];
+
+	const options = [];
+	for (const zone of zones) {
+		if (zone.game_center && zone.game_center.zones) {
+			for (const item of zone.game_center.zones) {
+				if (zone.name === item.name) {
+					options.push({ name: `${zone.game_center.name} - ${zone.name}`, uuid: item.uuid });
+				}
+			}
+		}
+	}
+	return options;
+}
+
+const postComputer = async () => {
+	try {
+		const res = await partnersStore.postComputer({
+			...computer.value,
+			map_x: props.coordinates?.x,
+			map_y: props.coordinates?.y,
+			zone_id: selectedZones.value.uuid,
+		})
+		res.then(() => {
+			router.push("/");
+		});
+
+	} catch (error) {
+		console.error("Ошибка при добавлении продукта:", error);
+	}
+};
+
+onMounted(async () => {
+	await adminPanelsStore.loadZones();
+});
+
 </script>
 
 <template>
@@ -44,23 +85,23 @@ const data = ref({
 				</div>
 				<div class="space-y-4 p-4 md:p-6">
 					<div class="input-wrapper">
-						<label for="">Номер места</label>
-						<InputPrimary class="input-primary" type="text" name="place" v-model="place_number" />
+						<label for="">Номер</label>
+						<InputPrimary class="input-primary" type="text" name="place" v-model="computer.number" />
 					</div>
 					<div class="input-wrapper">
 						<label for="">Зона</label>
-						<InputPrimary class="input-primary" type="text" name="zone" v-model="zone" />
+						<VueSelect v-model="selectedZones" :options="getZoneOptions(zones)" label="name" :clearable="false" />
 					</div>
 					<div class="input-wrapper">
 						<label for="">IP адрес</label>
-						<InputPrimary class="input-primary" type="text" name="ip_address" v-model="ip_address" />
+						<InputPrimary class="input-primary" type="text" name="ip_address" v-model="computer.ip_address" />
 					</div>
 					<div class="input-wrapper">
 						<label for="">MAC адрес</label>
-						<InputPrimary class="input-primary" type="text" name="mac_address" v-model="mac_address" />
+						<InputPrimary class="input-primary" type="text" name="mac_address" v-model="computer.mac_address" />
 					</div>
 					<div>
-						<Button class="btn-accent w-full">Сохранить</Button>
+						<Button @click.prevent="postComputer" class="btn-accent w-full">Сохранить</Button>
 					</div>
 				</div>
 			</div>

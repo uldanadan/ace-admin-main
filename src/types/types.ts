@@ -35,3 +35,10 @@ export interface GetParams {
 	email?: string | null;
 	is_staff?: boolean;
 }
+export interface Computer {
+	number: number;
+	mac_address: string;
+	ip_address: string;
+	map_x: number;
+	map_y: number;
+}
