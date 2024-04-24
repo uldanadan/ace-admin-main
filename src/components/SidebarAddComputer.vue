@@ -20,6 +20,7 @@ const adminPanelsStore = useAdminPanelsStore();
 const emit = defineEmits(["closeSidebar"]);
 
 const selectedZones = ref({uuid: ''});
+const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 
 const close = () => {
 	emit("closeSidebar", false)
@@ -39,9 +40,11 @@ const getZoneOptions = (zones) => {
 	const options = [];
 	for (const zone of zones) {
 		if (zone.game_center && zone.game_center.zones) {
-			for (const item of zone.game_center.zones) {
-				if (zone.name === item.name) {
-					options.push({ name: `${zone.game_center.name} - ${zone.name}`, uuid: item.uuid });
+			if (!selectedGameCenterUuid.value || zone.game_center.uuid === selectedGameCenterUuid.value) {
+				for (const item of zone.game_center.zones) {
+					if (zone.name === item.name) {
+						options.push({ name: `${zone.game_center.name} - ${zone.name}`, uuid: item.uuid });
+					}
 				}
 			}
 		}
@@ -62,7 +65,7 @@ const postComputer = async () => {
 		});
 
 	} catch (error) {
-		console.error("Ошибка при добавлении продукта:", error);
+		console.error("Ошибка при добавлении компьютера:", error);
 	}
 };
 
