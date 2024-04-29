@@ -45,7 +45,11 @@ const navItems = {
 		{ name: "Весь контент", link: "" }
 	],
 	"/": [
-		{ name: "Режим управления", link: "" },
+		{ name: "Режим управления", link: "/control" },
+		{ name: "Технический режим", link: "/" }
+	],
+	"/control": [
+		{ name: "Режим управления", link: "/control" },
 		{ name: "Технический режим", link: "/" }
 	]
 };

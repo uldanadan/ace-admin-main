@@ -54,16 +54,14 @@ const getZoneOptions = (zones) => {
 
 const postComputer = async () => {
 	try {
-		const res = await partnersStore.postComputer({
+		await partnersStore.postComputer({
 			...computer.value,
 			map_x: props.coordinates?.x,
 			map_y: props.coordinates?.y,
 			zone_id: selectedZones.value.uuid,
 		})
-		res.then(() => {
-			router.push("/");
-		});
 
+		window.location.reload();
 	} catch (error) {
 		console.error("Ошибка при добавлении компьютера:", error);
 	}

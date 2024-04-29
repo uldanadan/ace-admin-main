@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, onMounted } from "vue"
+import { defineProps, ref } from "vue"
 
 const props = defineProps<{
 	item: {
@@ -7,18 +7,18 @@ const props = defineProps<{
 	}
 }>()
 
-const emit = defineEmits(["openSidebar"]);
+const emit = defineEmits(["openChangeSidebar"]);
+const selected = ref(false);
 
 const handleMove = () => {
-	emit("openSidebar", props.item);
-	console.log(props.item);
+	emit("openChangeSidebar", props.item);
+	selected.value = !selected.value;
 }
-onMounted(() => {})
 </script>
 
 <template>
 	<div :style="'grid-area:' + `${props.item.map_y}` + '/' + `${props.item.map_x}`" class="map-item flex aspect-square h-full w-full items-center justify-center">
-		<button @click="handleMove" class="flex h-[70%] w-[70%] items-center justify-center rounded-lg bg-brand-gray">
+		<button @click="handleMove" :class="{ 'bg-brand-gray': selected }" class="flex h-[70%] w-[70%] items-center justify-center rounded-2xl border-2 border-brand-accent">
 			{{ item.number }}
 		</button>
 	</div>

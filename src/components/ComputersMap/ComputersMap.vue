@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import MapItem from "@/components/MapItem.vue";
+import MapItem from "./component/MapItem.vue";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
 import http from "@/http-common";
 
 const partnersStore = usePartnersStore();
+const selectedComputers = ref([]);
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
-const emit = defineEmits(["openSidebar"]);
+const emit = defineEmits(["openSidebar", "openChangeSidebar"]);
+
+const selectedComputerNumbers = computed(() =>
+	selectedComputers.value.map(computer => computer.number)
+);
 
 onMounted(async () => {
 	await loadComputers()
@@ -30,8 +35,7 @@ const loadComputers = async () => {
 				allComputers.push(...comp.data);
 				comp.data?.forEach(d => {
 					loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
-				})
-			})
+				})			})
 			partnersStore.computers = allComputers;
 		})
 	}
@@ -55,7 +59,7 @@ const debouncedY = refDebounced(map_y, 300);
 const coordinates = ref({
 	x: "",
 	y: ""
-})
+});
 
 watchEffect(() => {
 	coordinates.value.x = debouncedX.value;
@@ -83,14 +87,23 @@ const handleMap = e => {
 		map_x.value = resultX;
 		map_y.value = resultY;
 
-		const computerExists = computers.value.some(computer => {
-			return computer.map_x === resultX && computer.map_y === resultY;
-		});
+		const computer = computers.value.find(computer => computer.map_x === resultX && computer.map_y === resultY);
 
-		if (!computerExists) {
+		if (!computer) {
 			map_x.value = resultX;
 			map_y.value = resultY;
 			emit("openSidebar", resultX, resultY, computers);
+		} else {
+			const isSelected = selectedComputers.value.some(selected => selected.number === computer.number);
+			if (!isSelected && selectedComputers.value.length < 2) {
+				selectedComputers.value.push(computer);
+			} else {
+				selectedComputers.value = [computer];
+			}
+
+			if (selectedComputers.value.length === 2) {
+				emit("openChangeSidebar", selectedComputers.value);
+			}
 		}
 	}
 }
@@ -123,7 +136,6 @@ const removeMapItem = () => {
 watch(
 	coordinates,
 	newValue => {
-		console.log("x:", newValue.x, "y:", newValue.y)
 		const matchingCoordinate = loadedCoordinates.value.find(item => {
 			return item.x === newValue.x && item.y === newValue.y;
 		})

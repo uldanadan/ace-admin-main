@@ -1,7 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router"
 // import { useMainStore } from "@/stores/useMainStore"
 import Login from "@/pages/Login.vue"
-import ComputersMap from "@/pages/ComputersMap.vue"
+import ComputersMap from "@/pages/computersMap/ComputersMap.vue";
+import ComputersControl from "@/pages/computersMap/ComputersControl.vue";
 import Shop from "@/pages/shop/index.vue"
 import ShopItemDetail from "@/pages/shop/[slug].vue"
 import ShopAdd from "@/pages/shop/add.vue";
@@ -20,6 +21,14 @@ const routes = [
 	{
 		path: "/",
 		component: ComputersMap,
+		name: "Управление клуба",
+		meta: {
+			requiresAuth: true
+		}
+	},
+	{
+		path: "/control",
+		component: ComputersControl,
 		name: "Карта клуба",
 		meta: {
 			requiresAuth: true
