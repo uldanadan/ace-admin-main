@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { ref, defineProps, computed, watch, onMounted } from "vue";
+import { defineProps } from "vue";
 import { useRouter } from "vue-router";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
-import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 
 const props = defineProps({
 	opened: Boolean,
@@ -11,12 +10,12 @@ const props = defineProps({
 });
 
 const router = useRouter();
-const adminPanelsStore = useAdminPanelsStore();
 
 const emit = defineEmits(["closeSidebar"]);
 
 const close = () => {
-	emit("closeSidebar", false)
+	emit("closeSidebar", false);
+	window.location.reload();
 }
 
 </script>

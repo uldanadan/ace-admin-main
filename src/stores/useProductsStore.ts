@@ -11,7 +11,7 @@ export const useProductsStore = defineStore("products", () => {
 	//----------------------------------------------------------------------
 	const loadProducts = async (params: Record<string, any> = {}) => {
 		const page = params.page || 1;
-		const response = await ProductsDataService.getProducts(params, page);
+		const response = await ProductsDataService.getProducts(params);
 		products.value = response.data;
 		// paginationStore.updatePagination(response.data.count);
 	};

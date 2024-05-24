@@ -4,8 +4,11 @@ import SidebarAddComputer from "@/components/ComputersMap/component/SidebarAddCo
 import SidebarChangeComputer from "@/components/ComputersMap/component/SidebarChangeComputer.vue";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
 
-import { ref, reactive } from "vue"
+import { ref, reactive, onMounted } from "vue"
 import Button from "@/components/UI/Button.vue"
+import { useMainStore } from "@/stores/useMainStore";
+
+const adminPanelStore = useMainStore();
 const coordinates = ref({
 	x: "",
 	y: ""
@@ -36,6 +39,11 @@ const closeSidebar = () => {
 	openedSidebar.value = false;
 	openedChangeSidebar.value = false;
 }
+
+
+onMounted(async () => {
+	await adminPanelStore.loadUserInfo();
+});
 </script>
 
 <template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, computed, watch, onMounted } from "vue";
+import { defineProps } from "vue";
 import { useRouter } from "vue-router";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
