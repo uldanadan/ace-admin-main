@@ -10,34 +10,9 @@ const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const selectedComputers = ref();
 const emit = defineEmits([ "openActionSidebar"]);
 
-
 onMounted(async () => {
-	await loadComputers()
+	await partnersStore.loadComputers();
 })
-
-const loadComputers = async () => {
-	const queries = [];
-	const allComputers = [];
-	for (const gameCenter of gameCenters.value) {
-		const shouldLoad = !selectedGameCenterUuid.value || gameCenter.uuid === selectedGameCenterUuid.value;
-		if (shouldLoad) {
-			for (const zone of gameCenter.zones) {
-				queries.push(http.get(`/partners/game-centers/${gameCenter.uuid}/zones/${zone.uuid}/computers/`));
-			}
-		}
-	}
-	if (queries?.length) {
-		await Promise.all(queries).then(r => {
-			r.forEach(comp => {
-				allComputers.push(...comp.data);
-				comp.data?.forEach(d => {
-					loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
-				})
-			})
-			partnersStore.computers = allComputers;
-		})
-	}
-}
 
 const computers = computed(() => {
 	return partnersStore.getComputers;
@@ -46,8 +21,6 @@ const computers = computed(() => {
 const gameCenters = computed(() => {
 	return partnersStore.getGameCenters?.results || [];
 });
-
-const loadedCoordinates = ref([]);
 
 const map_x = ref();
 const map_y = ref();

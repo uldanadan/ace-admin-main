@@ -11,24 +11,26 @@ const SabNavItems = ref([]);
 
 const navItems = {
 	"/shop": [
-		{ name: "Заказы", link: "/order" },
 		{ name: "Товары", link: "/shop" },
+		{ name: "Заказы", link: "/order" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],
 	"/order": [
-		{ name: "Заказы", link: "/order" },
 		{ name: "Товары", link: "/shop" },
+		{ name: "Заказы", link: "/order" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],
 	"/shop/add": [
 		{ name: "Товары", link: "/shop/add" },
+		{ name: "Заказы", link: "/order" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],
 	"/shop/:slug": (slug) => [
 		{ name: "Товары", link: `/shop/${slug}` },
+		{ name: "Заказы", link: "/order" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }
 	],

@@ -5,8 +5,8 @@ import OrderDataService from "@/services/OrderDataService";
 export const useOrderStore = defineStore("orders", () => {
 	const orders = ref([]);
 
-	const loadOrders = async () => {
-		const response = await OrderDataService.getOrders();
+	const loadOrders = async (params: Record<string, any> = {}) => {
+		const response = await OrderDataService.getOrders(params);
 		orders.value = response.data;
 	};
 	const updateOrder = async (uuid: string, data: Product) => {

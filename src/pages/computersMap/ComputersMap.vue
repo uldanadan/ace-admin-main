@@ -4,7 +4,7 @@ import SidebarAddComputer from "@/components/ComputersMap/component/SidebarAddCo
 import SidebarChangeComputer from "@/components/ComputersMap/component/SidebarChangeComputer.vue";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue"
 
-import { ref, reactive, onMounted } from "vue"
+import { ref, onMounted } from "vue"
 import Button from "@/components/UI/Button.vue"
 import { useMainStore } from "@/stores/useMainStore";
 
@@ -39,7 +39,6 @@ const closeSidebar = () => {
 	openedSidebar.value = false;
 	openedChangeSidebar.value = false;
 }
-
 
 onMounted(async () => {
 	await adminPanelStore.loadUserInfo();

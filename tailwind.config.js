@@ -8,7 +8,7 @@ export default {
 			},
 			colors: {
 				white: "#ffffff",
-				"brand-line": "#d1d5db",
+				"brand-line": "#E8E8E8",
 				"brand-gray": "#f3f4f6",
 				"brand-dark": "#2A2A32",
 				"brand-light": "#FAFAFA",

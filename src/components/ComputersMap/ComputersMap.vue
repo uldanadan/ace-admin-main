@@ -10,36 +10,9 @@ const selectedComputers = ref([]);
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const emit = defineEmits(["openSidebar", "openChangeSidebar"]);
 
-const selectedComputerNumbers = computed(() =>
-	selectedComputers.value.map(computer => computer.number)
-);
-
 onMounted(async () => {
-	await loadComputers()
+	await partnersStore.loadComputers();
 })
-
-const loadComputers = async () => {
-	const queries = [];
-	const allComputers = [];
-	for (const gameCenter of gameCenters.value) {
-		const shouldLoad = !selectedGameCenterUuid.value || gameCenter.uuid === selectedGameCenterUuid.value;
-		if (shouldLoad) {
-			for (const zone of gameCenter.zones) {
-				queries.push(http.get(`/partners/game-centers/${gameCenter.uuid}/zones/${zone.uuid}/computers/`));
-			}
-		}
-	}
-	if (queries?.length) {
-		await Promise.all(queries).then(r => {
-			r.forEach(comp => {
-				allComputers.push(...comp.data);
-				comp.data?.forEach(d => {
-					loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
-				})			})
-			partnersStore.computers = allComputers;
-		})
-	}
-}
 
 const computers = computed(() => {
 	return partnersStore.getComputers;
@@ -67,7 +40,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)  loadComputers();
+	if (gameCenters.value.length)  partnersStore.loadComputers();
 })
 
 watch(

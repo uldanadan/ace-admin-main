@@ -14,7 +14,7 @@ const search = () => {
 
 <template>
 	<div class="relative flex items-center justify-end rounded">
-		<input type="text" v-model="searchQuery" @input="search" class="focus:outline-none rounded-3xl border-[1.5px] border-brand-accent py-3 pl-6 pr-10" />
+		<input type="text" v-model="searchQuery" @input="search" class="focus:outline-none rounded-2xl border-[1.5px] border-brand-accent py-2 pl-5 pr-8" />
 		<div class="cursor-pointer">
 			<img src="@/assets/img/icons/search.svg" @click="search" class="absolute right-3 top-1/2 transform -translate-y-1/2 pr-1">
 		</div>

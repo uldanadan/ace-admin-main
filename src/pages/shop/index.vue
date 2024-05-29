@@ -3,7 +3,7 @@ import { ref, onMounted, computed, watch } from "vue"
 import { useProductsStore } from "@/stores/useProductsStore";
 import { useCategoryStore } from "@/stores/useCategoryStore";
 import Search from "@/components/UI/SearchBar.vue";
-import Category from "@/components/UI/Category.vue";
+import FilterSelect from "@/components/UI/FilterSelect.vue";
 import { useRouter } from "vue-router";
 import { GetProductsParams } from "./types";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
@@ -67,7 +67,7 @@ watch(searchParams, async () => {
 				</div>
 				<div class="flex items-center space-x-7">
 					<Search :searchFunction="updateSearch" />
-					<div><Category :options="categories" :updateCategory="updateCategory" /></div>
+					<div><FilterSelect :options="categories" :updateCategory="updateCategory" type="category" /></div>
 					<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
 				</div>
 			</div>

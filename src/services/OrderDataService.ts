@@ -1,8 +1,8 @@
 import http from "@/http-common"
 
 class OrderDataService {
-	getOrders() {
-		return http.get("/admin_panel/cart/");
+	getOrders(params) {
+		return http.get("/admin_panel/cart/", { params });
 	}
 	updateOrders(uuid: string, data) {
 		return http.patch(`/admin_panel/cart/${uuid}/`, data, {

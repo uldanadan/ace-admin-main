@@ -23,7 +23,7 @@ body {
 }
 .btn {
 	&-accent {
-		@apply inline-block border-[1.5px] border-brand-accent rounded-3xl bg-brand-accent px-10 py-3 text-white transition-all duration-300 ease-in-out;
+		@apply inline-block border-[1.5px] border-brand-accent rounded-2xl bg-brand-accent px-10 py-2 text-white transition-all duration-300 ease-in-out;
 		&:hover {
 			@apply brightness-110;
 		}
