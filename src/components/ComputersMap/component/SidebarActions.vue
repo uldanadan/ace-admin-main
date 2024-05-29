@@ -15,7 +15,7 @@ const emit = defineEmits(["closeSidebar"]);
 
 const close = () => {
 	emit("closeSidebar", false);
-	window.location.reload();
+	// window.location.reload();
 }
 
 </script>

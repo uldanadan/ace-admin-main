@@ -14,13 +14,9 @@ onMounted(async () => {
 	await partnersStore.loadComputers();
 })
 
-const computers = computed(() => {
-	return partnersStore.getComputers;
-});
+const computers = computed(() => partnersStore.getComputers);
 
-const gameCenters = computed(() => {
-	return partnersStore.getGameCenters?.results || [];
-});
+const gameCenters = computed(() => partnersStore.getGameCenters?.results || []);
 
 const loadedCoordinates = ref([]);
 

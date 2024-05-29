@@ -91,15 +91,15 @@ watch(searchParams, async () => {
 			</div>
 			<div v-if="order.length"  class="flex justify-between py-8">
 				<div class="min-w-[300px]">
-					<h3 class="font-semibold ">Новые</h3>
+					<h3 class="title">Новые</h3>
 					<ul class="list tariffs-wrapper overflow-y-auto">
 						<li v-for="(item, index) in newProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
 							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
 								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
 							</div>
 							<div>
-								<p class="text-base font-semibold">{{ item.products[0].name }}</p>
-								<p class="text-sm font-semibold leading-3 font-bold py-2">{{ item.products[0].price }} ₸</p>
+								<p class="text-base font-medium">{{ item.products[0].name }}</p>
+								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
 								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
 							</div>
 							<button @click="updateProductStatus(item.uuid, 'FOR_WAITING')" class="text-yellow-500 hover:text-yellow-700">В работе</button>
@@ -108,15 +108,15 @@ watch(searchParams, async () => {
 				</div>
 
 				<div class="min-w-[300px]">
-					<h3 class="font-semibold ">В работе</h3>
+					<h3 class="title">В работе</h3>
 					<ul>
 						<li v-for="(item, index) in inProgressProducts" :key="index"  class="flex justify-between items-center border-b border-brand-line py-5">
 							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
 								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
 							</div>
 							<div>
-								<p class="text-base font-semibold">{{ item.products[0].name }}</p>
-								<p class="text-sm font-semibold leading-3 font-bold py-2">{{ item.products[0].price }} ₸</p>
+								<p class="text-base font-medium">{{ item.products[0].name }}</p>
+								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
 								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
 							</div>
 							<button  @click="updateProductStatus(item.uuid, 'COMPLETED')"  class="text-green-500 hover:text-green-700">Выполнить</button>
@@ -125,15 +125,15 @@ watch(searchParams, async () => {
 				</div>
 
 				<div class="min-w-[300px]">
-					<h3 class="font-semibold ">Выполнены</h3>
+					<h3 class="title">Выполнены</h3>
 					<ul>
 						<li v-for="(item, index) in completedProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
 							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
 								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
 							</div>
 							<div>
-								<p class="text-base font-semibold">{{ item.products[0].name }}</p>
-								<p class="text-sm font-semibold leading-3 font-bold py-2">{{ item.products[0].price }} ₸</p>
+								<p class="text-base font-medium">{{ item.products[0].name }}</p>
+								<p class="text-sm leading-3 py-2 font-medium">{{ item.products[0].price }} ₸</p>
 								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
 							</div>
 							<button @click="updateProductStatus(item.uuid, 'CANCELED')" class="text-red-500 hover:text-red-700">Отменить</button>
@@ -142,15 +142,15 @@ watch(searchParams, async () => {
 				</div>
 
 				<div class="min-w-[300px]">
-					<h3 class="font-semibold ">Отменены</h3>
+					<h3 class="title">Отменены</h3>
 					<ul>
 						<li v-for="(item, index) in canceledProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
 							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
 								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
 							</div>
 							<div>
-								<p class="text-base font-semibold">{{ item.products[0].name }}</p>
-								<p class="text-sm font-semibold leading-3 font-bold py-2">{{ item.products[0].price }} ₸</p>
+								<p class="text-base font-medium">{{ item.products[0].name }}</p>
+								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
 								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
 							</div>
 						</li>
@@ -170,5 +170,8 @@ watch(searchParams, async () => {
 <style lang="scss" scoped>
 .btn-accent {
 	padding-inline: 24px !important;
+}
+.title {
+	@apply font-semibold bg-gray-100 p-2 rounded-lg border border-brand-line text-gray-500;
 }
 </style>

@@ -14,13 +14,9 @@ onMounted(async () => {
 	await partnersStore.loadComputers();
 })
 
-const computers = computed(() => {
-	return partnersStore.getComputers;
-});
+const computers = computed(() => partnersStore.getComputers);
 
-const gameCenters = computed(() => {
-	return partnersStore.getGameCenters?.results || [];
-});
+const gameCenters = computed(() => partnersStore.getGameCenters?.results || []);
 
 const map_x = ref();
 const map_y = ref();
@@ -56,7 +52,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)  loadComputers();
+	if (gameCenters.value.length)   partnersStore.loadComputers();
 })
 
 watch(
