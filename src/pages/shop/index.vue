@@ -15,16 +15,33 @@ const categoryStore = useCategoryStore();
 const partnersStore = usePartnersStore();
 const router = useRouter();
 
-const searchParams = ref<GetProductsParams>({availability_in_game_centers: partnersStore.getSelectedGameCenter?.uuid});
+const searchParams = ref<GetProductsParams>({availability_in_game_centers: partnersStore.getSelectedGameCenter?.uuid, page: 1});
 
 const crumbs = [
 	{ label: 'Магазин', route: '/shop' },
 	{ label: 'Товары' }
 ];
 
-const categories = computed(() => {
-	return categoryStore.getCategories?.results || [];
-});
+const categories = computed(() => categoryStore.getCategories?.results || []);
+
+const products = computed(() => productsStore.getProducts?.results || []);
+
+const goToSlug = product => {
+	router.push({ path: `/shop/${product.uuid}` });
+}
+
+const updatePage = (page: number) => {
+	searchParams.value = { ...searchParams.value, page: page };
+};
+
+const updateSearch = (search: string) => {
+	searchParams.value = { ...searchParams.value, search: search, page: 1 };
+};
+
+const updateCategory = (category: { uuid: string }) => {
+	const categoryUuid = category ? category.uuid : '';
+	searchParams.value = { ...searchParams.value, category: categoryUuid, page: 1 };
+};
 
 onMounted(async () => {
 	try {
@@ -35,17 +52,9 @@ onMounted(async () => {
 	}
 })
 
-const products = computed(() => {
-	return productsStore.getProducts?.results || [];
-})
-
-const goToSlug = product => {
-	router.push({ path: `/shop/${product.uuid}` });
-}
-
-watch([searchParams.value], () => {
-	productsStore.loadProducts(searchParams.value);
-})
+watch(searchParams, async () => {
+	await productsStore.loadProducts(searchParams.value);
+}, {deep: true});
 </script>
 
 <template>
@@ -57,8 +66,8 @@ watch([searchParams.value], () => {
 					<Breadcrumbs :crumbs="crumbs" />
 				</div>
 				<div class="flex items-center space-x-7">
-					<Search :searchFunction="($event) => searchParams.search = $event" />
-					<div><Category :options="categories" :updateCategory="($event) => searchParams.category = $event?.uuid" /></div>
+					<Search :searchFunction="updateSearch" />
+					<div><Category :options="categories" :updateCategory="updateCategory" /></div>
 					<router-link to="/shop/add"><Button class="btn-accent">Добавить товар</Button></router-link>
 				</div>
 			</div>
@@ -117,8 +126,8 @@ watch([searchParams.value], () => {
 								<td>
 									<div class="flex items-center">
 										<template v-for="(center, index) in product.availability_in_game_centers">
-											<p v-if="index < 2" class="relative rounded-full h-10 w-10 flex items-center justify-center text-white text-sm font-bold border-[1.5px] border-brand-border" :class="index < 1 ? 'bg-brand-yellow' : 'bg-brand-blue right-[8px]'">{{ center.name[0].toUpperCase() }}</p>
-											<p v-else-if="index === 2" class="relative right-[16px] rounded-full h-10 w-10 flex items-center justify-center bg-brand-dark-blue text-white text-sm font-bold border-[1.5px] border-brand-border">+{{product.availability_in_game_centers.length - 2}}</p>
+											<p v-if="index < 2" class="rounded-full h-10 w-10 flex items-center justify-center text-white text-sm font-bold border-[1.5px] border-brand-border" :class="index < 1 ? 'bg-brand-yellow' : 'bg-brand-blue right-[8px]'">{{ center.name[0].toUpperCase() }}</p>
+											<p v-else-if="index === 2" class="right-[16px] rounded-full h-10 w-10 flex items-center justify-center bg-brand-dark-blue text-white text-sm font-bold border-[1.5px] border-brand-border">+{{product.availability_in_game_centers.length - 2}}</p>
 										</template>
 									</div>
 								</td>
@@ -126,8 +135,8 @@ watch([searchParams.value], () => {
 						</tbody>
 					</table>
 				</div>
+				<Pagination v-if="products.length" :totalCount="productsStore.count" @onChangePage="updatePage" />
 			</div>
-<!--			<Pagination />-->
 		</div>
 	</section>
 </template>

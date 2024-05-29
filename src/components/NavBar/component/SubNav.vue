@@ -11,6 +11,13 @@ const SabNavItems = ref([]);
 
 const navItems = {
 	"/shop": [
+		{ name: "Заказы", link: "/order" },
+		{ name: "Товары", link: "/shop" },
+		{ name: "Движение товаров", link: "" },
+		{ name: "Архив", link: "" }
+	],
+	"/order": [
+		{ name: "Заказы", link: "/order" },
 		{ name: "Товары", link: "/shop" },
 		{ name: "Движение товаров", link: "" },
 		{ name: "Архив", link: "" }

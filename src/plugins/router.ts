@@ -3,11 +3,12 @@ import { createRouter, createWebHistory } from "vue-router"
 import Login from "@/pages/Login.vue"
 import ComputersMap from "@/pages/computersMap/ComputersMap.vue";
 import ComputersControl from "@/pages/computersMap/ComputersControl.vue";
-import Shop from "@/pages/shop/index.vue"
-import ShopItemDetail from "@/pages/shop/[slug].vue"
+import Shop from "@/pages/shop/index.vue";
+import ShopItemDetail from "@/pages/shop/[slug].vue";
 import ShopAdd from "@/pages/shop/add.vue";
-import Users from "@/pages/users/index.vue"
-import Statistics from "@/pages/Statistics.vue"
+import Order from "@/pages/shop/order.vue";
+import Users from "@/pages/users/index.vue";
+import Statistics from "@/pages/Statistics.vue";
 
 const routes = [
 	{
@@ -54,6 +55,14 @@ const routes = [
 		path: "/shop/add",
 		name: "Добавить товар",
 		component: ShopAdd,
+		meta: {
+			requiresAuth: true
+		}
+	},
+	{
+		path: "/order",
+		name: "Заказы",
+		component: Order,
 		meta: {
 			requiresAuth: true
 		}
