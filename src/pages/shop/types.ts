@@ -11,4 +11,5 @@ export interface GetOrdersParams {
 	status?: string | null;
 	computer?: string | null;
 	page?: number | null;
+	created?: string | null;
 }

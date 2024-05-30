@@ -9,6 +9,7 @@ import VueSelect from "vue-select";
 import { GetOrdersParams } from "./types";
 import FilterSelect from "@/components/UI/FilterSelect.vue";
 import Pagination from '@/components/UI/Pagination.vue';
+import OrderStatusGroup from "./component/OrderStatusGroup.vue";
 
 const orderStore = useOrderStore();
 const partnersStore = usePartnersStore();
@@ -27,18 +28,10 @@ const crumbs = [
 const order = computed(() => orderStore.getOrders?.results);
 const computers = computed(() => partnersStore.getComputers);
 
-const newProducts = computed(() => {
-	return order.value?.filter(item => item.status === 'PAID') ?? [];
-});
-const inProgressProducts = computed(() => {
-	return order.value?.filter(item => item.status === 'FOR_WAITING') ?? [];
-});
-const completedProducts = computed(() => {
-	return order.value?.filter(item => item.status === 'COMPLETED') ?? [];
-});
-const canceledProducts = computed(() => {
-	return order.value?.filter(item => item.status === 'CANCELED') ?? [];
-});
+const newProducts = computed(() => order.value?.filter(item => item.status === 'FOR_WAITING') ?? []);
+const inProgressProducts = computed(() => order.value?.filter(item => item.status === 'PAID') ?? []);
+const completedProducts = computed(() => order.value?.filter(item => item.status === 'COMPLETED') ?? []);
+const canceledProducts = computed(() => order.value?.filter(item => item.status === 'CANCELED') ?? []);
 
 const updateProductStatus = async (uuid, status) => {
 	try {
@@ -95,66 +88,30 @@ watch(searchParams, async () => {
 					</div>
 				</div>
 			</div>
-			<div v-if="order.length"  class="flex justify-between py-8">
-				<div class="min-w-[300px]">
-					<h3 class="title">Новые</h3>
-					<ul class="list tariffs-wrapper overflow-y-auto">
-						<li v-for="(item, index) in newProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div>
-								<p class="text-base font-medium">{{ item.products[0].name }}</p>
-								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
-								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
-							</div>
-							<button @click="updateProductStatus(item.uuid, 'FOR_WAITING')" class="text-yellow-500 hover:text-yellow-700">В работе</button>
-						</li>
-					</ul>
-				</div>
-
-				<div class="min-w-[300px]">
-					<h3 class="title">В работе</h3>
-					<ul>
-						<li v-for="(item, index) in inProgressProducts" :key="index"  class="flex justify-between items-center border-b border-brand-line py-5">
-							<div>
-								<p class="text-base font-medium">{{ item.products[0].name }}</p>
-								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
-								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
-							</div>
-							<button  @click="updateProductStatus(item.uuid, 'COMPLETED')"  class="text-green-500 hover:text-green-700">Выполнить</button>
-						</li>
-					</ul>
-				</div>
-
-				<div class="min-w-[300px]">
-					<h3 class="title">Выполнены</h3>
-					<ul>
-						<li v-for="(item, index) in completedProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div>
-								<p class="text-base font-medium">{{ item.products[0].name }}</p>
-								<p class="text-sm leading-3 py-2 font-medium">{{ item.products[0].price }} ₸</p>
-								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
-							</div>
-							<button @click="updateProductStatus(item.uuid, 'CANCELED')" class="text-red-500 hover:text-red-700">Отменить</button>
-						</li>
-					</ul>
-				</div>
-
-				<div class="min-w-[300px]">
-					<h3 class="title">Отменены</h3>
-					<ul>
-						<li v-for="(item, index) in canceledProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div>
-								<p class="text-base font-medium">{{ item.products[0].name }}</p>
-								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
-								<p class="text-xs font-medium">компьютер: {{ item.computer?.number }}</p>
-							</div>
-						</li>
-					</ul>
-				</div>
+			<div v-if="order.length" class="flex justify-between pt-8">
+				<OrderStatusGroup
+					:orders="newProducts"
+					title="Новые"
+					text="Взять в работу"
+				/>
+				<OrderStatusGroup
+					:orders="inProgressProducts"
+					title="В работе"
+					text="Выполнить"
+				/>
+				<OrderStatusGroup
+					:orders="completedProducts"
+					title="Выполнены"
+					text="Отменить"
+				/>
+				<OrderStatusGroup
+					:orders="canceledProducts"
+					title="Отменены"
+				/>
 			</div>
 			<div v-else style="height: 100vh; padding-top: 2rem">
 				<div class="flex">
-<!--					<img src="@/assets/img/icons/basket.png">-->
-					<h2 class="text-xl pl-4"> На данный момент нет текущих заказов</h2>
+					<h2 class="text-xl pl-4">На данный момент нет текущих заказов</h2>
 				</div>
 			</div>
 			<Pagination v-if="order.length" :totalCount="orderStore.count" @onChangePage="updatePage" />
