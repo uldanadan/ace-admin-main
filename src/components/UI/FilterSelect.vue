@@ -36,7 +36,7 @@ const filterByCategory = (category) => {
 		<template #default="{ open }">
 			<ListboxButton class="flex justify-between min-w-48 items-center rounded-2xl border-[1.5px] border-brand-accent bg-white px-5 py-2" aria-haspopup="listbox" aria-expanded="true">
 				<p class="mr-5 line-clamp-1 inline-block whitespace-nowrap text-sm text-brand-accent lg:text-base">
-					{{ selectedOption ? type === category ? selectedOption.name : 'компьютер №' + selectedOption.number : defaultLabel }}
+					{{ selectedOption ? (type === 'category' ? selectedOption.name : 'компьютер №' + selectedOption.number) : defaultLabel }}
 				</p>
 				<img src="../../assets/img/icons/down.svg">
 			</ListboxButton>

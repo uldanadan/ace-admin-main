@@ -6,13 +6,15 @@ import { useRouter } from "vue-router";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import VueSelect from "vue-select";
+import { GetOrdersParams } from "./types";
 import FilterSelect from "@/components/UI/FilterSelect.vue";
+import Pagination from '@/components/UI/Pagination.vue';
 
 const orderStore = useOrderStore();
 const partnersStore = usePartnersStore();
 const router = useRouter();
 
-const searchParams = ref({});
+const searchParams = ref<GetOrdersParams>({page: 1});
 const today = new Date();
 const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
 const dates = ref([startDate, today]);
@@ -49,6 +51,10 @@ const updateProductStatus = async (uuid, status) => {
 const updateOrders = (computer: { uuid: string }) => {
 	const computerUUID = computer ? computer.uuid : '';
 	searchParams.value = { ...searchParams.value, computer: computerUUID, page: 1 };
+};
+
+const updatePage = (page: number) => {
+	searchParams.value = { ...searchParams.value, page: page };
 };
 
 onMounted(async () => {
@@ -94,9 +100,6 @@ watch(searchParams, async () => {
 					<h3 class="title">Новые</h3>
 					<ul class="list tariffs-wrapper overflow-y-auto">
 						<li v-for="(item, index) in newProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
-								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
-							</div>
 							<div>
 								<p class="text-base font-medium">{{ item.products[0].name }}</p>
 								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
@@ -111,9 +114,6 @@ watch(searchParams, async () => {
 					<h3 class="title">В работе</h3>
 					<ul>
 						<li v-for="(item, index) in inProgressProducts" :key="index"  class="flex justify-between items-center border-b border-brand-line py-5">
-							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
-								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
-							</div>
 							<div>
 								<p class="text-base font-medium">{{ item.products[0].name }}</p>
 								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
@@ -128,9 +128,6 @@ watch(searchParams, async () => {
 					<h3 class="title">Выполнены</h3>
 					<ul>
 						<li v-for="(item, index) in completedProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
-								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
-							</div>
 							<div>
 								<p class="text-base font-medium">{{ item.products[0].name }}</p>
 								<p class="text-sm leading-3 py-2 font-medium">{{ item.products[0].price }} ₸</p>
@@ -145,9 +142,6 @@ watch(searchParams, async () => {
 					<h3 class="title">Отменены</h3>
 					<ul>
 						<li v-for="(item, index) in canceledProducts" :key="index" class="flex justify-between items-center border-b border-brand-line py-5">
-							<div v-if="item.products[0].thumbnail?.image" class="h-20 w-20">
-								<img :src="item.products[0].thumbnail.image" class="h-full w-full object-cover" alt="" />
-							</div>
 							<div>
 								<p class="text-base font-medium">{{ item.products[0].name }}</p>
 								<p class="text-sm leading-3 font-medium py-2">{{ item.products[0].price }} ₸</p>
@@ -163,6 +157,7 @@ watch(searchParams, async () => {
 					<h2 class="text-xl pl-4"> На данный момент нет текущих заказов</h2>
 				</div>
 			</div>
+			<Pagination v-if="order.length" :totalCount="orderStore.count" @onChangePage="updatePage" />
 		</div>
 	</section>
 </template>

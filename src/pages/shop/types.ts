@@ -6,3 +6,9 @@ export interface GetProductsParams {
 	search?: string | null;
 	page?: number | null;
 }
+
+export interface GetOrdersParams {
+	status?: string | null;
+	computer?: string | null;
+	page?: number | null;
+}
