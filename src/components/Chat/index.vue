@@ -8,7 +8,6 @@
         <Box
             v-model="isShow"
             v-model:idSocket="idSocket"
-            @resetIdSocket="idSocket = 0"
             :isAdmin="isAdmin"
         >
             <Players
