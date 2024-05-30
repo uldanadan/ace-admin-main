@@ -10,13 +10,25 @@ const selectedComputers = ref([]);
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const emit = defineEmits(["openSidebar", "openChangeSidebar"]);
 
-onMounted(async () => {
+const loadComputers = async () => {
 	await partnersStore.loadComputers();
+	computers.value.forEach(d => {
+		loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
+	});
+}
+
+onMounted(async () => {
+	await loadComputers();
+	console.log(computers.value);
 })
 
-const computers = computed(() => partnersStore.getComputers);
+const computers = computed(() => {
+	return partnersStore.getComputers;
+});
 
-const gameCenters = computed(() => partnersStore.getGameCenters?.results || []);
+const gameCenters = computed(() => {
+	return partnersStore.getGameCenters?.results || [];
+});
 
 const loadedCoordinates = ref([]);
 
@@ -36,7 +48,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)  partnersStore.loadComputers();
+	if (gameCenters.value.length)  loadComputers();
 })
 
 watch(
