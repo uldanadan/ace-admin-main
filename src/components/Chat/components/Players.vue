@@ -42,8 +42,10 @@ const players = ref<any[]>([
 
 <style scoped lang="scss">
 .chat-players {
+    height: 100%;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
 
     &__item {
         display: flex;
