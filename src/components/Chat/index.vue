@@ -25,8 +25,8 @@ import { ref } from 'vue'
 
 const isShow = ref<boolean>(false)
 
-const isAdmin = ref<boolean>(false)
-const idSocket = ref<number>(1)
+const isAdmin = ref<boolean>(true)
+const idSocket = ref<number>(0)
 </script>
 
 <style scoped lang="scss">
