@@ -58,7 +58,6 @@ const setMessage = () => {
     height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 24px;
 
     &__items {
         flex: 1 1 auto;
@@ -67,7 +66,7 @@ const setMessage = () => {
         gap: 12px;
 
         overflow-y: auto;
-        margin-bottom: 20px;
+        padding: 24px 24px 0;
     }
 
     &__item {
@@ -114,6 +113,7 @@ const setMessage = () => {
         display: flex;
         align-items: center;
         gap: 12px;
+        padding: 24px;
 
         input {
             flex: 1 1 auto;
