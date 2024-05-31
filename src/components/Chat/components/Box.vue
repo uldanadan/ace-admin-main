@@ -7,7 +7,7 @@
         <div class="chat-box__header">
             <Icon icon="chevron" deg="left" @click="resetIdSocket()" v-if="isAdmin && idSocket" />
 
-            <h3 v-if="isAdmin">{{ idSocket ? 'Player ' + idSocket : 'Players listes' }}</h3>
+            <h3 v-if="isAdmin">{{ idSocket ? 'Player ' + idSocket : 'List of players' }}</h3>
             <h3 v-else>Chat</h3>
 
             <Icon icon="xmark" @click="closeBox()" />
@@ -65,7 +65,6 @@ onClickOutside(box, () => closeBox())
     background: #444857;
     transition: .2s;
     border-radius: 8px;
-    overflow-y: auto;
 
     &__show {
         right: 50px;

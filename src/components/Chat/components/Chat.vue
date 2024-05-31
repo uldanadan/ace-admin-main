@@ -55,7 +55,7 @@ const setMessage = () => {
 
 <style scoped lang="scss">
 .chat-message {
-    height: calc(100% - 57px);
+    height: 100%;
     display: flex;
     flex-direction: column;
     padding: 24px;
