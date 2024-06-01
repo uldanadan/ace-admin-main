@@ -56,15 +56,17 @@ const selectedCategory = ref(null);
 const selectedGameCenters = ref([]);
 
 watchEffect(() => {
-	credentials.value.name = product.value?.name
-	credentials.value.article = product.value?.article
-	credentials.value.price = product.value?.price
-	credentials.value.amount = product.value?.amount
-	credentials.value.description = product.value?.description
-	credentials.value.thumbnail = product.value?.thumbnail?.uuid
-	selectedCategory.value = product.value?.category
-	selectedGameCenters.value = product.value?.availability_in_game_centers
-})
+	if (product.value) {
+		credentials.value.name = product.value.name || '';
+		credentials.value.article = product.value.article || '';
+		credentials.value.price = product.value.price || 0;
+		credentials.value.amount = product.value.amount || '';
+		credentials.value.description = product.value.description || '';
+		credentials.value.thumbnail = product.value.thumbnail?.uuid || '';
+		selectedCategory.value = product.value.category || null;
+		selectedGameCenters.value = product.value.availability_in_game_centers || [];
+	}
+});
 
 
 const updateProduct = async () => {
@@ -96,6 +98,10 @@ const deletedProduct = async () => {
 		toast.success("Продукт успешно удален!");
 	}
 }
+
+const handleFileUploaded = (uuid) => {
+	product.value.thumbnail = uuid;
+};
 </script>
 
 <template>
@@ -146,7 +152,7 @@ const deletedProduct = async () => {
 				</div>
 				<div class="input-wrapper">
 					<label for="" class="label">Изображение:</label>
-					<FileUploader :initialImage="product.thumbnail.image" @onFileUploaded="product.thumbnail = $event.uuid" />
+					<FileUploader :initialImage="product?.thumbnail.image" @onFileUploaded="handleFileUploaded" />
 				</div>
 			</div>
 		</div>

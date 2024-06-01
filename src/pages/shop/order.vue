@@ -33,9 +33,20 @@ const inProgressProducts = computed(() => order.value?.filter(item => item.statu
 const completedProducts = computed(() => order.value?.filter(item => item.status === 'COMPLETED') ?? []);
 const canceledProducts = computed(() => order.value?.filter(item => item.status === 'CANCELED') ?? []);
 
-const updateProductStatus = async (uuid, status) => {
+const updateProductStatus = async (productUuids, status) => {
 	try {
-		await orderStore.updateOrder(uuid, { status });
+		await Promise.all(productUuids.map(async (uuid) => {
+			const currentOrder = order.value.find(item => item.uuid === uuid);
+
+			const updateData = {
+				...currentOrder,
+				status,
+				computer: currentOrder.computer.uuid,
+				products: currentOrder.products.uuid
+			};
+
+			await orderStore.updateOrder(uuid, updateData);
+		}));
 	} catch (error) {
 		console.error('Failed to update product status:', error);
 	}
@@ -93,16 +104,19 @@ watch(searchParams, async () => {
 					:orders="newProducts"
 					title="Новые"
 					text="Взять в работу"
+					@update-status="(uuid) => updateProductStatus(uuid, 'PAID')"
 				/>
 				<OrderStatusGroup
 					:orders="inProgressProducts"
 					title="В работе"
 					text="Выполнить"
+					@update-status="(uuid) => updateProductStatus(uuid, 'COMPLETED')"
 				/>
 				<OrderStatusGroup
 					:orders="completedProducts"
 					title="Выполнены"
 					text="Отменить"
+					@update-status="(uuid) => updateProductStatus(uuid, 'CANCELED')"
 				/>
 				<OrderStatusGroup
 					:orders="canceledProducts"

@@ -8,6 +8,7 @@ interface OrderStatusGroupProps {
 }
 
 const props = defineProps<OrderStatusGroupProps>();
+const emit = defineEmits(['update-status']);
 
 const groupOrders = (orders) => {
 	const grouped = {};
@@ -75,6 +76,11 @@ const totalQuantity = (orders) => {
 	});
 	return totalQuantity;
 };
+
+const handleClick = (orders) => {
+	const productUuids = orders.map(order => order.uuid);
+	emit('update-status', productUuids);
+};
 </script>
 
 <template>
@@ -88,7 +94,7 @@ const totalQuantity = (orders) => {
 						<p class="text-sm">Компьютер: {{ orders[0].computer.number }}</p>
 						<p class="text-sm">Game Center: {{ orders[0].computer.game_center.name }}</p>
 					</div>
-					<button @click="updateStatus(order, 'Paid')">{{ text }}</button>
+					<button @click="handleClick(orders)">{{ text }}</button>
 				</div>
 				<ul class="my-4">
 					<li v-for="(item, index) in groupProducts(orders)" :key="index" class="flex justify-between items-center border-b border-brand-line py-2">

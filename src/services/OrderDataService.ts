@@ -5,7 +5,7 @@ class OrderDataService {
 		return http.get("/admin_panel/cart/", { params });
 	}
 	updateOrders(uuid: string, data) {
-		return http.patch(`/admin_panel/cart/${uuid}/`, data, {
+		return http.put(`/admin_panel/cart/${uuid}/`, data, {
 			headers: {
 				"Content-Type": "application/json"
 			}

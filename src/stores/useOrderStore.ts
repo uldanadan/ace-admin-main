@@ -14,7 +14,7 @@ export const useOrderStore = defineStore("orders", () => {
 	const updateOrder = async (uuid: string, data: Product) => {
 		await OrderDataService.updateOrders(uuid, data);
 		await loadOrders();
-	}
+	};
 	const getOrders = computed(() => {
 		return orders.value
 	});
