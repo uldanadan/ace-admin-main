@@ -5,6 +5,7 @@ interface OrderStatusGroupProps {
 	orders: Array<any>;
 	title: string;
 	text: string;
+	buttonClass: string;
 }
 
 const props = defineProps<OrderStatusGroupProps>();
@@ -81,6 +82,7 @@ const handleClick = (orders) => {
 	const productUuids = orders.map(order => order.uuid);
 	emit('update-status', productUuids);
 };
+
 </script>
 
 <template>
@@ -94,7 +96,7 @@ const handleClick = (orders) => {
 						<p class="text-sm">Компьютер: {{ orders[0].computer.number }}</p>
 						<p class="text-sm">Game Center: {{ orders[0].computer.game_center.name }}</p>
 					</div>
-					<button @click="handleClick(orders)">{{ text }}</button>
+					<button @click="handleClick(orders)":class="buttonClass">{{ text }}</button>
 				</div>
 				<ul class="my-4">
 					<li v-for="(item, index) in groupProducts(orders)" :key="index" class="flex justify-between items-center border-b border-brand-line py-2">

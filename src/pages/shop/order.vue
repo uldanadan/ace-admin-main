@@ -105,18 +105,21 @@ watch(searchParams, async () => {
 					title="Новые"
 					text="Взять в работу"
 					@update-status="(uuid) => updateProductStatus(uuid, 'PAID')"
+					:buttonClass="'text-yellow-500'"
 				/>
 				<OrderStatusGroup
 					:orders="inProgressProducts"
 					title="В работе"
 					text="Выполнить"
 					@update-status="(uuid) => updateProductStatus(uuid, 'COMPLETED')"
+					:buttonClass="'text-green-500'"
 				/>
 				<OrderStatusGroup
 					:orders="completedProducts"
 					title="Выполнены"
 					text="Отменить"
 					@update-status="(uuid) => updateProductStatus(uuid, 'CANCELED')"
+					:buttonClass="'text-red-500'"
 				/>
 				<OrderStatusGroup
 					:orders="canceledProducts"
