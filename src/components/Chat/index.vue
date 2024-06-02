@@ -1,21 +1,19 @@
 <template>
     <div class="chat">
         <div class="chat__button" @click="isShow = !isShow">
-            <span>{{ isAdmin ? 'Players' : 'Support' }} <sup>91</sup></span>
+            <span>Players <sup>91</sup></span>
             <div class="chat__wrapper" v-if="!isShow" />
         </div>
 
         <Box
             v-model="isShow"
             v-model:idSocket="idSocket"
-            :isAdmin="isAdmin"
         >
             <div class="chat__transition">
                 <Players
                     class="chat__transition-left"
-                    :class="{ 'active': isAdmin && idSocket }"
+                    :class="{ 'active': !idSocket }"
                     @setIdSocket="(id: number) => idSocket = id"
-                    v-if="isAdmin"
                 />
                 <Chat
                     class="chat__transition-right"
@@ -31,8 +29,6 @@ import { Players, Chat, Box } from './components'
 import { ref } from 'vue'
 
 const isShow = ref<boolean>(false)
-
-const isAdmin = ref<boolean>(true)
 const idSocket = ref<number>(0)
 </script>
 
