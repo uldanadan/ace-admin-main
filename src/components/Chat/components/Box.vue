@@ -5,10 +5,9 @@
         :class="{ 'chat-box__show' : modelValue }"
     >
         <div class="chat-box__header">
-            <Icon icon="chevron" deg="left" @click="resetIdSocket()" v-if="isAdmin && idSocket" />
+            <Icon icon="chevron" deg="left" @click="resetIdSocket()" v-if="idSocket" />
 
-            <h3 v-if="isAdmin">{{ idSocket ? 'Player ' + idSocket : 'List of players' }}</h3>
-            <h3 v-else>Chat</h3>
+            <h3>{{ idSocket ? 'Player ' + idSocket : 'List of players' }}</h3>
 
             <Icon icon="xmark" @click="closeBox()" />
         </div>
@@ -21,10 +20,6 @@ import Icon from '@/components/UI/Icon.vue'
 import { ref, defineModel, watch } from 'vue'
 import { onClickOutside, useMagicKeys } from '@vueuse/core'
 
-const props = defineProps<{
-    isAdmin?: boolean
-}>()
-
 const modelValue = defineModel<boolean>()
 const idSocket = defineModel<number>('idSocket')
 
@@ -33,7 +28,7 @@ const box = ref<HTMLElement | null>(null)
 const { escape } = useMagicKeys()
 
 watch(escape, (v) => {
-  if (v) idSocket.value && props.isAdmin ? resetIdSocket() : closeBox()
+  if (v) idSocket.value ? resetIdSocket() : closeBox()
 })
 
 const resetIdSocket = () => {
@@ -45,9 +40,7 @@ const closeBox = () => {
     if (modelValue.value) {
         modelValue.value = false
 
-        if (props.isAdmin) {
-            resetIdSocket()
-        }
+        resetIdSocket()
     }
 }
 
