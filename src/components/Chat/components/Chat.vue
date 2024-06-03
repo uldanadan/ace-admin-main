@@ -5,13 +5,14 @@
                 v-for="item in messages"
                 :key="item"
                 class="chat-message__item"
-                :class="{ 'chat-message__item-right' : item?.isAdmin }"
+                :class="{ 'chat-message__item-right' : !item?.admin || item?.sender == 'bot' }"
             >
-                <img src="https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676295806139337963.png" v-if="!item?.isAdmin">
-                <img src="https://w7.pngwing.com/pngs/862/646/png-transparent-beard-hipster-male-man-avatars-xmas-giveaway-icon-thumbnail.png" v-else>
+                <img src="https://w7.pngwing.com/pngs/862/646/png-transparent-beard-hipster-male-man-avatars-xmas-giveaway-icon-thumbnail.png" v-if="item?.admin">
+                <img src="https://bryansk.news/wp-content/uploads/2022/09/bot.png" v-if="item?.sender == 'bot'">
+                <img src="https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676295806139337963.png" v-else>
                 <div>
-                    <p>{{ item?.text }}</p>
-                    <span>{{ item?.date }}</span>
+                    <p>{{ item?.message }}</p>
+                    <span>{{ item?.created_at }}</span>
                 </div>
             </div>
         </div>
@@ -44,7 +45,7 @@ const setMessage = () => {
     emit('setMessage', {
         text: message.value,
         id: props.messages?.length + 1,
-        isAdmin: !props.messages[0].isAdmin,
+        isAdmin: props.messages?.length ? !props.messages[0].isAdmin : true,
         date: '16:03'
     })
 
