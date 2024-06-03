@@ -7,19 +7,19 @@
 
         <Box
             v-model="isShow"
-            v-model:idPlayer="idPlayer"
+            v-model:emailPlayer="emailPlayer"
         >
             <div class="chat__transition">
                 <Players
                     class="chat__transition-left"
-                    :class="{ 'active': !idPlayer }"
+                    :class="{ 'active': emailPlayer }"
                     :players="players"
-                    @setIdPlayer="(id: number) => idPlayer = id"
+                    @setEmailPlayer="(email: string) => emailPlayer = email"
                 />
                 <Chat
                     class="chat__transition-right"
-                    :class="{ 'active': idPlayer }"
-                    :messages="messages[idPlayer]"
+                    :class="{ 'active': emailPlayer }"
+                    :messages="messages[emailPlayer]"
                     @setMessage="setMessage"
                 />
             </div>
@@ -30,50 +30,78 @@
 <script setup lang="ts">
 import { Players, Chat, Box } from './components'
 import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { useAuthStore } from '@/stores/useAuthStore'
 
 const isShow = ref<boolean>(false)
 
-const idAdmin = ref<number | string>('admin')
-const idPlayer = ref<number>(0)
+const authStore = useAuthStore()
+const token = `${authStore.getToken ? authStore.getToken : localStorage.getItem('token') || null}`
 
-const players = ref<any[]>([
-    { id: 1, text: 'Полный' },
-    { id: 2, text: '' },
-    { id: 3, text: '' },
-    { id: 4, text: '' },
-    { id: 5, text: '' },
-    { id: 6, text: '' },
-    { id: 7, text: '' },
-    { id: 8, text: '' },
-    { id: 9, text: '' },
-    { id: 10, text: '' },
-    { id: 11, text: '' },
-    { id: 12, text: '' },
-    { id: 13, text: '' },
-    { id: 14, text: '' },
-])
+const emailPlayer = ref<string>('')
+
+const players = ref<any>({ 
+    1: '123.COM@acegaming.gg' 
+})
 
 const sockets = ref<{ [key: string]: WebSocket }>({})
 const messages = ref<{ [key: string]: any[] }>({
     1: [
-        { isAdmin: true, id: 4, text: 'Here is the estimated. Please check', date: '16:03' },
-        { isAdmin: false, id: 3, text: 'Please send me a estimated cost', date: '16:02' },
-        { isAdmin: true, id: 2, text: 'Hello, Yes I can make this', date: '16:01' },
-        { isAdmin: false, id: 1, text: 'Hey Zakir, I want to make this type of workspace. Can you help me?', date: '16:00' },
+        { 
+            status: 'error',
+            message: 'Админ временна не доступен...', 
+            sender: 'bot',
+            created_at: '16:03',
+            admin: false
+        },
+        { 
+            status: 'ok',
+            message: 'Please send me a estimated cost', 
+            sender: 'you',
+            created_at: '16:02',
+            admin: false
+        },
+        { 
+            status: 'ok',
+            message: 'Hello, Yes I can make this', 
+            sender: 'admin',
+            created_at: '16:01',
+            admin: true
+        },
+        { 
+            status: 'ok',
+            message: 'Hey Zakir, I want to make this type of workspace. Can you help me?', 
+            sender: 'you',
+            created_at: '16:00',
+            admin: false
+        },
     ]
 })
 
 onMounted(() => {
-    players.value.forEach((player: any) => {
-        const ws = new WebSocket(`ws://localhost:8080?id=${idAdmin.value}&user=${player?.id}`)
-        sockets.value[player?.id] = ws
-        messages.value[player?.id] = []
+    for (const iterator in players.value) {
+        const email = players.value[iterator]
+
+        const ws = new WebSocket('wss://service.acegaming.gg/ws/chat/', [token])
+        sockets.value[email] = ws
+        messages.value[email] = []
 
         ws.onmessage = (event) => {
             const data = JSON.parse(event.data)
-            messages.value[player?.id].unshift(data.message)
+
+            if (data.status !== 'ok') { 
+                messages.value[email].unshift({
+                    status: 'error',
+                    message: 'Админ временна не доступен...', 
+                    sender: 'bot',
+                    created_at: '16:03',
+                    admin: false
+                })
+            } else {
+                messages.value[email].unshift(data.message)
+            }
+            
         }
-    })
+    }
 })
 
 onBeforeUnmount(() => {
@@ -81,16 +109,16 @@ onBeforeUnmount(() => {
 })
 
 const setMessage = (message: any) => {
-    const ws = sockets.value[idPlayer.value]
+    const ws = sockets.value[emailPlayer.value]
 
     if (ws && Object.keys(message)?.length) {
 
         ws.send(JSON.stringify({ 
-            targetId: idPlayer.value,
+            to: emailPlayer.value,
             message: message 
         }))
 
-        messages.value[idPlayer.value].unshift(message)
+        // messages.value[emailPlayer.value].unshift(message)
     }
 }
 </script>

@@ -2,14 +2,14 @@
     <div class="chat-players">
         <div
             class="chat-players__item"
-            v-for="item in players"
-            :key="item"
-            @click="emit('setIdPlayer', item?.id)"
+            v-for="(email, number) in players"
+            :key="number"
+            @click="emit('setEmailPlayer', email)"
         >
-            <div>{{ item?.id }}</div>
+            <div>{{ number }}</div>
 
-            <p :style="`${ !item?.text ? 'opacity: .5;' : '' }`">
-                {{ item?.text || 'В этом чате еще нет сообщений' }}
+            <p :style="`${ true ? 'opacity: .5;' : '' }`">
+                {{ false || 'В этом чате еще нет сообщений' }}
             </p>
 
             <span>18:30</span>
@@ -18,10 +18,10 @@
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['setIdPlayer'])
+const emit = defineEmits(['setEmailPlayer'])
 
 const props = defineProps<{
-    players: any[]
+    players: any
 }>()
 
 props
