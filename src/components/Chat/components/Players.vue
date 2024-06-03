@@ -4,7 +4,7 @@
             class="chat-players__item"
             v-for="item in players"
             :key="item"
-            @click="emit('setIdSocket', item?.id)"
+            @click="emit('setIdPlayer', item?.id)"
         >
             <div>{{ item?.id }}</div>
 
@@ -18,26 +18,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+const emit = defineEmits(['setIdPlayer'])
 
-const emit = defineEmits(['setIdSocket'])
+const props = defineProps<{
+    players: any[]
+}>()
 
-const players = ref<any[]>([
-    { id: 1, text: 'Полный' },
-    { id: 2, text: '' },
-    { id: 3, text: '' },
-    { id: 4, text: '' },
-    { id: 5, text: '' },
-    { id: 6, text: '' },
-    { id: 7, text: '' },
-    { id: 8, text: '' },
-    { id: 9, text: '' },
-    { id: 10, text: '' },
-    { id: 11, text: '' },
-    { id: 12, text: '' },
-    { id: 13, text: '' },
-    { id: 14, text: '' },
-])
+props
 </script>
 
 <style scoped lang="scss">

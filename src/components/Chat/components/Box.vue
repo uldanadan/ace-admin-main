@@ -5,9 +5,9 @@
         :class="{ 'chat-box__show' : modelValue }"
     >
         <div class="chat-box__header">
-            <Icon icon="chevron" deg="left" @click="resetIdSocket()" v-if="idSocket" />
+            <Icon icon="chevron" deg="left" @click="resetidPlayer()" v-if="idPlayer" />
 
-            <h3>{{ idSocket ? 'Player ' + idSocket : 'List of players' }}</h3>
+            <h3>{{ idPlayer ? 'Player ' + idPlayer : 'List of players' }}</h3>
 
             <Icon icon="xmark" @click="closeBox()" />
         </div>
@@ -21,26 +21,26 @@ import { ref, defineModel, watch } from 'vue'
 import { onClickOutside, useMagicKeys } from '@vueuse/core'
 
 const modelValue = defineModel<boolean>()
-const idSocket = defineModel<number>('idSocket')
+const idPlayer = defineModel<number>('idPlayer')
 
 const box = ref<HTMLElement | null>(null)
 
 const { escape } = useMagicKeys()
 
 watch(escape, (v) => {
-  if (v) idSocket.value ? resetIdSocket() : closeBox()
+  if (v) idPlayer.value ? resetidPlayer() : closeBox()
 })
 
-const resetIdSocket = () => {
-    if (idSocket.value) {
-        idSocket.value = 0
+const resetidPlayer = () => {
+    if (idPlayer.value) {
+        idPlayer.value = 0
     }
 }
 const closeBox = () => {
     if (modelValue.value) {
         modelValue.value = false
 
-        resetIdSocket()
+        resetidPlayer()
     }
 }
 

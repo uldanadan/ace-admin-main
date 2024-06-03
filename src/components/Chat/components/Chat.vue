@@ -31,21 +31,20 @@ import InputPrimary from '@/components/UI/InputPrimary.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { ref } from 'vue'
 
-const messages = ref<any[]>([
-    { isAdmin: true, id: 4, text: 'Here is the estimated. Please check', date: '16:03' },
-    { isAdmin: false, id: 3, text: 'Please send me a estimated cost', date: '16:02' },
-    { isAdmin: true, id: 2, text: 'Hello, Yes I can make this', date: '16:01' },
-    { isAdmin: false, id: 1, text: 'Hey Zakir, I want to make this type of workspace. Can you help me?', date: '16:00' },
-])
+const props = defineProps<{
+    messages: any[]
+}>()
+
+const emit = defineEmits(['setMessage'])
 
 const message = ref<string>('')
 const setMessage = () => {
     if (!message.value) return
 
-    messages.value.unshift({
+    emit('setMessage', {
         text: message.value,
-        id: messages.value?.length + 1,
-        isAdmin: !messages.value[0].isAdmin,
+        id: props.messages?.length + 1,
+        isAdmin: !props.messages[0].isAdmin,
         date: '16:03'
     })
 
