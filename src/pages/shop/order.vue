@@ -18,6 +18,7 @@ const router = useRouter();
 const searchParams = ref<GetOrdersParams>({page: 1});
 const today = new Date();
 const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
+startDate.setDate(startDate.getDate() - 7);
 const dates = ref([startDate, today]);
 
 const crumbs = [
@@ -54,7 +55,7 @@ const updateProductStatus = async (productUuids, status) => {
 
 const updateOrders = (computer: { uuid: string }) => {
 	const computerUUID = computer ? computer.uuid : '';
-	searchParams.value = { ...searchParams.value, computer: computerUUID, page: 1 };
+	searchParams.value = { ...searchParams.value, computer: computerUUID, page: 1, created_from: (dates.value[0]), created_to: dates.value[1] };
 };
 
 const updatePage = (page: number) => {
@@ -89,6 +90,7 @@ watch(searchParams, async () => {
 					<div class="flex items-center">
 						<VueDatePicker
 							v-model="dates"
+							:multiCalendars="2"
 							:clearable="false"
 							:range="true"
 							locale="ru"
