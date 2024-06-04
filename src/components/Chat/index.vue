@@ -35,13 +35,7 @@ import { useAuthStore } from '@/stores/useAuthStore'
 const isShow = ref<boolean>(false)
 
 const authStore = useAuthStore()
-const token = `${authStore.getToken ? authStore.getToken : localStorage.getItem('token') || null}`
-
-const emailPlayer = ref<string>('')
-
-const players = ref<any>({ 
-    1: '123.COM@acegaming.gg' 
-})
+const token = authStore.getToken ? authStore.getToken : localStorage.getItem('token')
 
 const sockets = ref<{ [key: string]: WebSocket }>({})
 const messages = ref<{ [key: string]: any[] }>({
@@ -77,11 +71,16 @@ const messages = ref<{ [key: string]: any[] }>({
     ]
 })
 
+const players = ref<any>({ 
+    1: '123.COM@acegaming.gg' 
+})
+const emailPlayer = ref<string>('')
+
 onMounted(() => {
     for (const iterator in players.value) {
         const email = players.value[iterator]
 
-        const ws = new WebSocket('wss://service.acegaming.gg/ws/chat/', [token])
+        const ws = new WebSocket(`wss://service.acegaming.gg/ws/chat/?token=${token}`)
         sockets.value[email] = ws
         messages.value[email] = []
 
