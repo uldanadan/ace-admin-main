@@ -3,25 +3,31 @@
         <div
             class="chat-players__item"
             v-for="(email, number) in players"
-            :key="number"
-            @click="emit('setEmailPlayer', email)"
+            :key="number + email"
+            @click="emit('setPlayerId', number)"
         >
             <div>{{ number }}</div>
 
-            <p :style="`${ true ? 'opacity: .5;' : '' }`">
-                {{ false || 'В этом чате еще нет сообщений' }}
+            <p :style="`${ !messages?.[number]?.[0]?.message ? 'opacity: .5;' : '' }`">
+                {{ messages?.[number]?.[0]?.message || 'В этом чате еще нет сообщений' }}
             </p>
 
-            <span>18:30</span>
+            <span v-if="messages?.[number]?.[0]?.created_at">
+                {{ moment(messages?.[number]?.[0]?.created_at).format('HH:mm') }}
+            </span>
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-const emit = defineEmits(['setEmailPlayer'])
+import { Messages } from '@/types/types'
+import moment from 'moment'
+
+const emit = defineEmits(['setPlayerId'])
 
 const props = defineProps<{
-    players: any
+    players: { [key: string]: string }
+    messages: Messages
 }>()
 
 props
@@ -66,12 +72,17 @@ props
         }
 
         p {
-            max-width: 255px;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            white-space: nowrap;
+            width: 255px;
+            font-size: 14px;
         }
 
         span {
             margin-left: auto;
             opacity: .8;
+            font-size: 12px;
         }
     }
 }

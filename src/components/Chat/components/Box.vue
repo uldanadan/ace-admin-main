@@ -5,10 +5,12 @@
         :class="{ 'chat-box__show' : modelValue }"
     >
         <div class="chat-box__header">
-            <Icon icon="chevron" deg="left" @click="resetEmailPlayer()" v-if="emailPlayer" />
+            <Icon icon="chevron" deg="left" @click="resetPlayerId()" v-if="playerId" />
 
-            <h3>{{ emailPlayer ? 'Player ' + emailPlayer : 'List of players' }}</h3>
-
+            <h3>
+                {{ playerId ? 'Player ' + playerId : 'List of players' }} 
+                <span v-if="playerId">{{ players[playerId] }}</span>
+            </h3>
             <Icon icon="xmark" @click="closeBox()" />
         </div>
         <slot />
@@ -21,30 +23,36 @@ import { ref, defineModel, watch } from 'vue'
 import { onClickOutside, useMagicKeys } from '@vueuse/core'
 
 const modelValue = defineModel<boolean>()
-const emailPlayer = defineModel<string>('emailPlayer')
+const playerId = defineModel<string>('playerId')
+
+const props = defineProps<{
+    players: { [key: string]: string }
+}>()
 
 const box = ref<HTMLElement | null>(null)
 
 const { escape } = useMagicKeys()
 
 watch(escape, (v) => {
-  if (v) emailPlayer.value ? resetEmailPlayer() : closeBox()
+  if (v) playerId.value ? resetPlayerId() : closeBox()
 })
 
-const resetEmailPlayer = () => {
-    if (emailPlayer.value) {
-        emailPlayer.value = ''
+const resetPlayerId = () => {
+    if (playerId.value) {
+        playerId.value = ''
     }
 }
 const closeBox = () => {
     if (modelValue.value) {
         modelValue.value = false
 
-        resetEmailPlayer()
+        resetPlayerId()
     }
 }
 
 onClickOutside(box, () => closeBox())
+
+props
 </script>
 
 <style scoped lang="scss">
@@ -75,6 +83,12 @@ onClickOutside(box, () => closeBox())
 
         h3 {
             font-weight: 600;
+
+            span {
+                font-size: 12px;
+                font-weight: 400;
+                opacity: .7;
+            }
         }
 
         .xmark {
