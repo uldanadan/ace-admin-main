@@ -1,25 +1,27 @@
 <template>
     <div class="chat">
         <div class="chat__button" @click="isShow = !isShow">
-            <span>Players <sup>91</sup></span>
+            <span>Players <sup v-if="count">{{ count }}</sup></span>
             <div class="chat__wrapper" v-if="!isShow" />
         </div>
 
         <Box
             v-model="isShow"
-            v-model:emailPlayer="emailPlayer"
+            v-model:playerId="playerId"
+            :players="players"
         >
             <div class="chat__transition">
                 <Players
                     class="chat__transition-left"
-                    :class="{ 'active': emailPlayer }"
+                    :class="{ 'active': playerId }"
                     :players="players"
-                    @setEmailPlayer="(email: string) => emailPlayer = email"
+                    :messages="messages"
+                    @setPlayerId="setPlayerId"
                 />
                 <Chat
                     class="chat__transition-right"
-                    :class="{ 'active': emailPlayer }"
-                    :messages="messages[emailPlayer]"
+                    :class="{ 'active': playerId }"
+                    :messages="messages[playerId]"
                     @setMessage="setMessage"
                 />
             </div>
@@ -29,97 +31,112 @@
 
 <script setup lang="ts">
 import { Players, Chat, Box } from './components'
-import { ref, onMounted, onBeforeUnmount } from 'vue'
+import { ref, onMounted, onBeforeUnmount, watch } from 'vue'
 import { useAuthStore } from '@/stores/useAuthStore'
+import { useWebSocket, useSessionStorage } from '@vueuse/core'
+import { Messages, Message } from '@/types/types'
 
 const isShow = ref<boolean>(false)
 
 const authStore = useAuthStore()
 const token = authStore.getToken ? authStore.getToken : localStorage.getItem('token')
 
-const sockets = ref<{ [key: string]: WebSocket }>({})
-const messages = ref<{ [key: string]: any[] }>({
-    1: [
-        { 
-            status: 'error',
-            message: 'Админ временна не доступен...', 
-            sender: 'bot',
-            created_at: '16:03',
-            admin: false
-        },
-        { 
-            status: 'ok',
-            message: 'Please send me a estimated cost', 
-            sender: 'you',
-            created_at: '16:02',
-            admin: false
-        },
-        { 
-            status: 'ok',
-            message: 'Hello, Yes I can make this', 
-            sender: 'admin',
-            created_at: '16:01',
-            admin: true
-        },
-        { 
-            status: 'ok',
-            message: 'Hey Zakir, I want to make this type of workspace. Can you help me?', 
-            sender: 'you',
-            created_at: '16:00',
-            admin: false
-        },
-    ]
-})
+const players = ref<{ [key: string]: string }>({})
+const messages = useSessionStorage<Messages>('messages', {})
+const playerId = ref<string >('')   
 
-const players = ref<any>({ 
-    1: '123.COM@acegaming.gg' 
-})
-const emailPlayer = ref<string>('')
+const { data, send, close } = useWebSocket(`wss://service.acegaming.gg/ws/chat/?token=${token}`)
 
-onMounted(() => {
-    for (const iterator in players.value) {
-        const email = players.value[iterator]
+const count = ref<number>(0)
 
-        const ws = new WebSocket(`wss://service.acegaming.gg/ws/chat/?token=${token}`)
-        sockets.value[email] = ws
-        messages.value[email] = []
+// Обработка ответа
+watch(data, (v) => {
+    const res = JSON.parse(v)
+    
+    if (res.type == 'messages') {
+        const sender: any = Object.keys(players.value).find((el: any) => players.value[el] === res.sender)      
 
-        ws.onmessage = (event) => {
-            const data = JSON.parse(event.data)
-
-            if (data.status !== 'ok') { 
-                messages.value[email].unshift({
-                    status: 'error',
-                    message: 'Админ временна не доступен...', 
-                    sender: 'bot',
-                    created_at: '16:03',
-                    admin: false
-                })
-            } else {
-                messages.value[email].unshift(data.message)
-            }
-            
+        if (!messages.value[sender]?.length) {
+            messages.value[sender] = []
         }
+        
+        if (!messages.value[sender].filter((el: any) => el?.uuid == res?.uuid)?.length) {
+            messages.value[sender].unshift(res)
+        }
+
+        if (playerId.value) {
+            setReadMessages()
+        }
+    } 
+    
+    if (res.type == 'users_list') {
+        players.value = res.users
     }
-})
 
-onBeforeUnmount(() => {
-    Object.values(sockets.value).forEach((ws) => ws.close())
-})
+    if (res.type == 'new_messages') {
+        count.value = res.count
+    }
+}, { deep: true })
+// Обработка ответа
 
+// Отправка СМС
 const setMessage = (message: any) => {
-    const ws = sockets.value[emailPlayer.value]
-
-    if (ws && Object.keys(message)?.length) {
-
-        ws.send(JSON.stringify({ 
-            to: emailPlayer.value,
+    if (message) {
+        send(JSON.stringify({
+            type: 'message',
+            to: players.value[playerId.value],
             message: message 
         }))
 
-        // messages.value[emailPlayer.value].unshift(message)
+        if (!messages.value[playerId.value]?.length) {
+            messages.value[playerId.value] = []
+        }
+
+        messages.value[playerId.value].unshift({
+            message: message, 
+            created_at: new Date,
+            admin: true
+        })
     }
 }
+// Отправка СМС
+
+const setPlayerId = (number: string) => {
+    playerId.value = number
+    setReadMessages()
+}
+
+const setReadMessages = () => {
+    let ids: any[] = []
+
+    const message = messages.value[playerId.value]
+
+    if (message?.length) {
+        ids = message.filter((el: Message) => el.uuid).map((el: Message) => el.uuid)
+    }
+    
+    send(JSON.stringify({
+        type: 'command',
+        command: '__SEEN__',
+        uuid: ids
+    }))
+}
+
+onMounted(() => {
+    send(JSON.stringify({
+        type: 'command',
+        command: '__GET_COMPUTER_USERS__'
+    }))
+})
+setInterval(() => {
+    send(JSON.stringify({
+        type: 'command',
+        command: '__CHECK_NEW_MESSAGES__'
+    }))
+}, 3000)
+onBeforeUnmount(() => {
+    close()
+})
 </script>
 
 <style scoped lang="scss">

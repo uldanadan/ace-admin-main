@@ -42,3 +42,17 @@ export interface Computer {
 	map_x: number;
 	map_y: number;
 }
+
+export interface Message {
+    type?: string
+    status?: string
+    sender?: string
+    message: string
+    created_at: any
+    admin: boolean
+	uuid?: string
+}
+
+export interface Messages { 
+	[key: string]: Message[] 
+}

@@ -3,16 +3,17 @@
         <div class="chat-message__items">
             <div
                 v-for="item in messages"
-                :key="item"
+                :key="item?.created_at"
                 class="chat-message__item"
-                :class="{ 'chat-message__item-right' : !item?.admin || item?.sender == 'bot' }"
+                :class="{ 'chat-message__item-right' : item?.admin }"
             >
-                <img src="https://w7.pngwing.com/pngs/862/646/png-transparent-beard-hipster-male-man-avatars-xmas-giveaway-icon-thumbnail.png" v-if="item?.admin">
-                <img src="https://bryansk.news/wp-content/uploads/2022/09/bot.png" v-if="item?.sender == 'bot'">
-                <img src="https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676295806139337963.png" v-else>
+                <img v-if="item?.admin"                 src="https://w7.pngwing.com/pngs/862/646/png-transparent-beard-hipster-male-man-avatars-xmas-giveaway-icon-thumbnail.png">
+                <img v-else-if="item?.sender == 'system'"  src="https://bryansk.news/wp-content/uploads/2022/09/bot.png">
+                <img v-else                             src="https://cs14.pikabu.ru/post_img/big/2023/02/13/8/1676295806139337963.png">
+
                 <div>
                     <p>{{ item?.message }}</p>
-                    <span>{{ item?.created_at }}</span>
+                    <span>{{ moment(item?.created_at).format('HH:mm') }}</span>
                 </div>
             </div>
         </div>
@@ -30,10 +31,12 @@
 <script setup lang="ts">
 import InputPrimary from '@/components/UI/InputPrimary.vue'
 import Icon from '@/components/UI/Icon.vue'
+import { Message } from '@/types/types'
+import moment from 'moment'
 import { ref } from 'vue'
 
 const props = defineProps<{
-    messages: any[]
+    messages: Message[]
 }>()
 
 const emit = defineEmits(['setMessage'])
@@ -42,15 +45,12 @@ const message = ref<string>('')
 const setMessage = () => {
     if (!message.value) return
 
-    emit('setMessage', {
-        text: message.value,
-        id: props.messages?.length + 1,
-        isAdmin: props.messages?.length ? !props.messages[0].isAdmin : true,
-        date: '16:03'
-    })
+    emit('setMessage', message.value)
 
     message.value = ''
 }
+
+props
 </script>
 
 <style scoped lang="scss">
@@ -65,7 +65,7 @@ const setMessage = () => {
         flex-direction: column-reverse;
         gap: 12px;
 
-        overflow-y: auto;
+        overflow-y: scroll;
         padding: 24px 24px 0;
     }
 
