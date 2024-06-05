@@ -53,7 +53,7 @@ const count = ref<number>(0)
 watch(data, (v) => {
     const res = JSON.parse(v)
 
-    if (res.type == 'messages') {
+    if (res?.type == 'messages') {
         const sender: any = Object.keys(players.value).find((el: string) => players.value[el] === res.sender)
 
         if (!messages.value[sender]?.length) {
@@ -69,11 +69,11 @@ watch(data, (v) => {
         }
     }
 
-    if (res.type == 'users_list') {
+    if (res?.type == 'users_list') {
         players.value = res.users
     }
 
-    if (res.type == 'new_messages') {
+    if (res?.type == 'new_messages') {
         count.value = res.count
     }
 }, { deep: true })
