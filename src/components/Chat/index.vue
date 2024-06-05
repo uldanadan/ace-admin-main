@@ -43,7 +43,7 @@ const token = authStore.getToken ? authStore.getToken : localStorage.getItem('to
 
 const players = ref<{ [key: string]: string }>({})
 const messages = useSessionStorage<Messages>('messages', {})
-const playerId = ref<string >('')   
+const playerId = ref<string >('')
 
 const { data, send, close } = useWebSocket(`wss://service.acegaming.gg/ws/chat/?token=${token}`)
 
@@ -52,23 +52,23 @@ const count = ref<number>(0)
 // Обработка ответа
 watch(data, (v) => {
     const res = JSON.parse(v)
-    
+
     if (res.type == 'messages') {
-        const sender: any = Object.keys(players.value).find((el: any) => players.value[el] === res.sender)      
+        const sender: any = Object.keys(players.value).find((el: string) => players.value[el] === res.sender)
 
         if (!messages.value[sender]?.length) {
             messages.value[sender] = []
         }
-        
-        if (!messages.value[sender].filter((el: any) => el?.uuid == res?.uuid)?.length) {
+
+        if (!messages.value[sender].filter((el: Message) => el?.uuid == res?.uuid)?.length) {
             messages.value[sender].unshift(res)
         }
 
         if (playerId.value) {
             setReadMessages()
         }
-    } 
-    
+    }
+
     if (res.type == 'users_list') {
         players.value = res.users
     }
@@ -80,12 +80,12 @@ watch(data, (v) => {
 // Обработка ответа
 
 // Отправка СМС
-const setMessage = (message: any) => {
+const setMessage = (message: string) => {
     if (message) {
         send(JSON.stringify({
             type: 'message',
             to: players.value[playerId.value],
-            message: message 
+            message: message
         }))
 
         if (!messages.value[playerId.value]?.length) {
@@ -93,7 +93,7 @@ const setMessage = (message: any) => {
         }
 
         messages.value[playerId.value].unshift({
-            message: message, 
+            message: message,
             created_at: new Date,
             admin: true
         })
@@ -112,9 +112,9 @@ const setReadMessages = () => {
     const message = messages.value[playerId.value]
 
     if (message?.length) {
-        ids = message.filter((el: Message) => el.uuid).map((el: Message) => el.uuid)
+        ids = message.filter((el: Message) => el?.uuid).map((el: Message) => el.uuid)
     }
-    
+
     send(JSON.stringify({
         type: 'command',
         command: '__SEEN__',
