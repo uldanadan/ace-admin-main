@@ -13,7 +13,7 @@
 
                 <div>
                     <p>{{ item?.message }}</p>
-                    <span>{{ moment(item?.created_at).format('HH:mm') }}</span>
+                    <span>{{ getDate(item?.created_at) }}</span>
                 </div>
             </div>
         </div>
@@ -32,7 +32,6 @@
 import InputPrimary from '@/components/UI/InputPrimary.vue'
 import Icon from '@/components/UI/Icon.vue'
 import { Message } from '@/types/types'
-import moment from 'moment'
 import { ref } from 'vue'
 
 const props = defineProps<{
@@ -48,6 +47,17 @@ const setMessage = () => {
     emit('setMessage', message.value)
 
     message.value = ''
+}
+
+const getDate = (created_at: any): string => {
+    if (!created_at) return ''
+
+    const date = new Date(created_at)
+
+    const hours = String(date.getHours())?.padStart(2, '0')
+    const minutes = String(date.getMinutes())?.padStart(2, '0')
+
+    return `${hours}:${minutes}`
 }
 
 props

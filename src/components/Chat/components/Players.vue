@@ -13,7 +13,7 @@
             </p>
 
             <span v-if="messages?.[number]?.[0]?.created_at">
-                {{ moment(messages?.[number]?.[0]?.created_at).format('HH:mm') }}
+                {{ getDate(messages?.[number]?.[0]?.created_at) }}
             </span>
         </div>
     </div>
@@ -21,7 +21,6 @@
 
 <script setup lang="ts">
 import { Messages } from '@/types/types'
-import moment from 'moment'
 
 const emit = defineEmits(['setPlayerId'])
 
@@ -29,6 +28,17 @@ const props = defineProps<{
     players: { [key: string]: string }
     messages: Messages
 }>()
+
+const getDate = (created_at: any): string => {
+    if (!created_at) return ''
+
+    const date = new Date(created_at)
+
+    const hours = String(date.getHours())?.padStart(2, '0')
+    const minutes = String(date.getMinutes())?.padStart(2, '0')
+
+    return `${hours}:${minutes}`
+}
 
 props
 </script>
