@@ -19,7 +19,8 @@ export default {
 				"brand-yellow": "#FFC700",
 				"brand-blue": "#00A3FF",
 				"brand-dark-blue": "#181C32",
-				"brand-border": "#FFFFFF80"
+				"brand-border": "#FFFFFF80",
+				"brand-red": "#EF4444"
 			},
 			transitionTimingFunction: {
 				"in-expo": "cubic-bezier(0.95, 0.05, 0.795, 0.035)",

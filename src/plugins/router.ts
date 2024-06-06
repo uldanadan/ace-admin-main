@@ -9,6 +9,8 @@ import ShopAdd from "@/pages/shop/add.vue";
 import Order from "@/pages/shop/order.vue";
 import Users from "@/pages/users/index.vue";
 import Statistics from "@/pages/Statistics.vue";
+import OpenWorkShift from "@/pages/OpenWorkShift.vue"
+import WorkShift from "@/pages/WorkShift.vue"
 
 const routes = [
 	{
@@ -79,6 +81,24 @@ const routes = [
 		path: "/statistics",
 		component: Statistics,
 		name: "Статистика",
+		meta: {
+			requiresAuth: true
+		}
+	},
+	// boxOffice page
+	{
+		path: "/open-work-shift",
+		component: OpenWorkShift,
+		name: "Касса",
+		meta: {
+			requiresAuth: true
+		}
+	},
+	// boxOfficeStatistics page
+	{
+		path: "/work-shift",
+		component: WorkShift,
+		name: "Таблица",
 		meta: {
 			requiresAuth: true
 		}

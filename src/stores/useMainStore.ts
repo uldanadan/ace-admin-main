@@ -6,7 +6,18 @@ import type { Statistics } from "@/types/types"
 export const useMainStore = defineStore("main", () => {
 	const user = ref(null)
 	const statistics = ref()
+	const workShiftData = ref([])
+	const gameCenters = ref([])
+	const topPanelHeight = ref(null)
+	const openedWorkShift = ref(null)
+	const isLoading = ref(false)
 	//----------------------------------------------------------------------
+	function setOpenedWorkShift(item) {
+		openedWorkShift.value = item
+	}
+	async function loadOpenedWorkShift() {
+		return await MainDataService.getOpenedWorkShift()
+	}
 	const loadUserInfo = async () => {
 		const response = await MainDataService.getUserInfo()
 		console.log("user info " + JSON.stringify(response))
@@ -35,11 +46,28 @@ export const useMainStore = defineStore("main", () => {
 		// })
 	}
 	//----------------------------------------------------------------------
+	async function loadWorkShift(page) {
+		const response = await MainDataService.getWorkShift(page)
+		console.log("loadWorkShift", response)
+		if (response.status === 200) {
+			workShiftData.value = response.data
+		}
+	}
+	async function createWorkShift(data) {
+		return await MainDataService.createWorkShift(data)
+	}
+	async function closeWorkShift(uuid, data) {
+		return await MainDataService.closeWorkShift(uuid, data)
+	}
+	const loadGameCenters = async () => {
+		const response = await MainDataService.getGameCenters()
+		gameCenters.value = response.data.results
+	}
 	const getUser = computed(() => {
 		return user.value
 	})
 	const getStatistics = computed(() => {
 		return statistics.value
 	})
-	return { user, getUser, loadUserInfo, loadStatistics, getStatistics, statistics }
+	return { isLoading, topPanelHeight, loadOpenedWorkShift, setOpenedWorkShift, closeWorkShift, openedWorkShift, user, gameCenters, loadGameCenters, createWorkShift, workShiftData, getUser, loadWorkShift, loadUserInfo, loadStatistics, getStatistics, statistics }
 })

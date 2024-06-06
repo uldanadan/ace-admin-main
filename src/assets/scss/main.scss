@@ -71,6 +71,10 @@ body {
 			box-shadow: 0 0 0 0.1rem #819cff;
 		}
 	}
+
+	&-search {
+		@apply flex items-center justify-between rounded border border-brand-line px-2 py-2 text-sm font-normal;
+	}
 }
 
 .heading {
@@ -113,6 +117,29 @@ body {
 				}
 				td {
 					@apply p-3;
+				}
+			}
+		}
+	}
+}
+.table-secondary {
+	@apply overflow-x-auto bg-white;
+	table {
+		@apply w-full;
+		thead {
+			tr {
+				th {
+					@apply min-w-[200px] border border-brand-line px-2 py-2 text-left xl:px-4 xl:py-3;
+				}
+			}
+		}
+		tbody {
+			tr {
+				td {
+					@apply min-w-[200px] border border-brand-line;
+					.cell-value {
+						@apply px-2 py-2 text-sm xl:px-4 xl:py-3;
+					}
 				}
 			}
 		}
