@@ -43,7 +43,7 @@ const updateProductStatus = async (productUuids, status) => {
 				...currentOrder,
 				status,
 				computer: currentOrder.computer.uuid,
-				products: currentOrder.products.uuid
+				products: currentOrder.products.map(product => product.uuid)
 			};
 
 			await orderStore.updateOrder(uuid, updateData);
