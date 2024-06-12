@@ -29,10 +29,10 @@ const crumbs = [
 const order = computed(() => orderStore.getOrders?.results);
 const computers = computed(() => partnersStore.getComputers);
 
-const newProducts = computed(() => order.value?.filter(item => item.status === 'FOR_WAITING') ?? []);
-const inProgressProducts = computed(() => order.value?.filter(item => item.status === 'PAID') ?? []);
-const completedProducts = computed(() => order.value?.filter(item => item.status === 'COMPLETED') ?? []);
-const canceledProducts = computed(() => order.value?.filter(item => item.status === 'CANCELED') ?? []);
+const newProducts = computed(() => order.value?.filter(item => item.status === 'FOR_WAITING' && item.products.length > 0) ?? []);
+const inProgressProducts = computed(() => order.value?.filter(item => item.status === 'PAID' && item.products.length > 0) ?? []);
+const completedProducts = computed(() => order.value?.filter(item => item.status === 'COMPLETED' && item.products.length > 0) ?? []);
+const canceledProducts = computed(() => order.value?.filter(item => item.status === 'CANCELED' && item.products.length > 0) ?? []);
 
 const updateProductStatus = async (productUuids, status) => {
 	try {
@@ -74,7 +74,6 @@ onMounted(async () => {
 watch(searchParams, async () => {
 	await orderStore.loadOrders(searchParams.value);
 }, {deep: true});
-
 </script>
 
 <template>
@@ -104,14 +103,14 @@ watch(searchParams, async () => {
 			<div v-if="order.length" class="flex justify-between pt-8">
 				<OrderStatusGroup
 					:orders="newProducts"
-					title="Новые"
+					title="В ожидании"
 					text="Взять в работу"
 					@update-status="(uuid) => updateProductStatus(uuid, 'PAID')"
 					:buttonClass="'text-yellow-500'"
 				/>
 				<OrderStatusGroup
 					:orders="inProgressProducts"
-					title="В работе"
+					title="Новые"
 					text="Выполнить"
 					@update-status="(uuid) => updateProductStatus(uuid, 'COMPLETED')"
 					:buttonClass="'text-green-500'"

@@ -41,11 +41,17 @@ const handleClick = (order) => {
 			<div v-for="order in props.orders" :key="order.uuid" class="order-card p-4 mb-4 bg-white rounded shadow">
 				<div class="flex items-center justify-between">
 					<div>
-						<h3 class="text-xl font-semibold">Заказ #{{ (order.uuid).substring(0, 5) }}</h3>
+						<h3 class="text-xl font-semibold flex items-center">Заказ #{{ (order.uuid).substring(0, 5) }}</h3>
 						<p class="text-sm">Компьютер: {{ order.computer.number }}</p>
 						<p class="text-sm">Game Center: {{ order.computer.game_center.name }}</p>
 					</div>
-					<button @click="handleClick(order)" :class="buttonClass">{{ text }}</button>
+					<div>
+						<button @click="handleClick(order)" :class="buttonClass">{{ text }}</button>
+						<div class="h-6 w-6 ml-16">
+							<img v-if="order.payment_type === 'CASH'" src="@/assets/img/icons/tenge.png" alt="Tenge" />
+							<img v-else-if="order.payment_type === 'KASPI'" src="@/assets/img/icons/qr.png" alt="Kaspi QR" />
+						</div>
+					</div>
 				</div>
 				<ul class="my-4">
 					<li v-for="(item, index) in order.products" :key="index" class="flex justify-between items-center border-b border-brand-line py-2">
