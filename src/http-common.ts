@@ -2,7 +2,6 @@ import axios from "axios"
 import { useAuthStore } from "@/stores/useAuthStore"
 
 const instance = axios.create({
-	// baseURL: "http://10.10.100.110:8080/api/v1",
 	baseURL: "https://service.acegaming.gg/api/v1",
 	headers: {
 		"Content-type": "application/json"
