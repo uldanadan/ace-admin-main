@@ -41,6 +41,7 @@ export interface Computer {
 	ip_address: string;
 	map_x: number;
 	map_y: number;
+	zone_id: string;
 }
 
 export interface Message {

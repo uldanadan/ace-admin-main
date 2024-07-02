@@ -1,17 +1,12 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { useRouter } from "vue-router";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
-import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 
 const props = defineProps({
 	opened: Boolean,
 	selectedComputer: Object
 });
-
-const router = useRouter();
-const adminPanelsStore = useAdminPanelsStore();
 
 const emit = defineEmits(["closeSidebar"]);
 
@@ -27,7 +22,7 @@ const swapComputers = () => {
 </script>
 
 <template>
-	<div class="sidebar fixed inset-y-0 right-0 z-30 flex h-full w-full justify-end" :class="{ active: opened }">
+	<div class="sidebar fixed inset-y-0 right-0 z-30 flex h-full w-full justify-end" :class="{ active: props.opened }">
 		<div @click.prevent="close" class="backdrop"></div>
 		<div class="sidebar-wrapper relative z-20 h-full w-[90%] bg-white md:w-[400px]">
 			<div>
@@ -38,7 +33,7 @@ const swapComputers = () => {
 					</button>
 				</div>
 				<div class="space-y-4 p-4 md:p-6">
-					<div v-for="(computer, index) in selectedComputer" :key="index">
+					<div v-for="(computer, index) in props.selectedComputer" :key="index">
 						<label>Номер</label>
 						<p>{{ computer.number }}</p>
 					</div>

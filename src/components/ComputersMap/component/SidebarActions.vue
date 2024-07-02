@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { defineProps } from "vue";
-import { useRouter } from "vue-router";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
 
@@ -8,8 +7,6 @@ const props = defineProps({
 	opened: Boolean,
 	selectedComputer: Object
 });
-
-const router = useRouter();
 
 const emit = defineEmits(["closeSidebar"]);
 
@@ -21,12 +18,12 @@ const close = () => {
 </script>
 
 <template>
-	<div class="sidebar fixed inset-y-0 right-0 z-30 flex h-full w-full justify-end" :class="{ active: opened }">
+	<div class="sidebar fixed inset-y-0 right-0 z-30 flex h-full w-full justify-end" :class="{ active: props.opened }">
 		<div @click.prevent="close" class="backdrop"></div>
 		<div class="sidebar-wrapper relative z-20 h-full w-[90%] bg-white md:w-[400px]">
 			<div>
 				<div class="flex items-center justify-between border-b border-brand-line p-4 md:p-6">
-					<p class="heading-secondary" >Действия на ПК № {{ selectedComputer?.number }}</p>
+					<p class="heading-secondary" >Действия на ПК № {{props.selectedComputer?.number }}</p>
 					<button @click.prevent="close" class="btn-close">
 						<Close />
 					</button>

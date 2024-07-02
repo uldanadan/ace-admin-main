@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { ref, defineProps, computed, watch, onMounted } from "vue";
-import { useRouter } from "vue-router";
+import { ref, defineProps, computed, onMounted } from "vue";
 import InputPrimary from "@/components/UI/InputPrimary.vue";
 import Close from "@/components/icons/Close.vue";
 import Button from "@/components/UI/Button.vue";
@@ -14,7 +13,6 @@ const props = defineProps({
 	selectedComputer: Object,
 });
 
-const router = useRouter();
 const partnersStore = usePartnersStore();
 const adminPanelsStore = useAdminPanelsStore();
 const emit = defineEmits(["closeSidebar"]);
@@ -27,14 +25,15 @@ const close = () => {
 }
 
 const computer = ref({
-	number: null,
+	number: 0,
 	ip_address: "",
-	mac_address: ""
-})
+	mac_address: "",
+	zone_id: ""
+});
 
 const zones = computed(() => adminPanelsStore.getZone);
 
-const getZoneOptions = (zones) => {
+const getZoneOptions = (zones: any[]) => {
 	if (!zones) return [];
 
 	const options = [];
@@ -50,7 +49,7 @@ const getZoneOptions = (zones) => {
 		}
 	}
 	return options;
-}
+};
 
 const postComputer = async () => {
 	try {
@@ -71,6 +70,15 @@ onMounted(async () => {
 	await adminPanelsStore.loadZones();
 });
 
+const formattedNumber = computed({
+	get() {
+		return computer.value.number.toString();
+	},
+	set(val: string) {
+		const parsedValue = parseFloat(val);
+		computer.value.number = isNaN(parsedValue) ? 0 : parsedValue;
+	}
+});
 </script>
 
 <template>
@@ -87,7 +95,7 @@ onMounted(async () => {
 				<div class="space-y-4 p-4 md:p-6">
 					<div class="input-wrapper">
 						<label for="">Номер</label>
-						<InputPrimary class="input-primary" type="text" name="place" v-model="computer.number" />
+						<InputPrimary class="input-primary" type="text" name="place" v-model="formattedNumber" label="Номер" />
 					</div>
 					<div class="input-wrapper">
 						<label for="">Зона</label>
@@ -95,11 +103,11 @@ onMounted(async () => {
 					</div>
 					<div class="input-wrapper">
 						<label for="">IP адрес</label>
-						<InputPrimary class="input-primary" type="text" name="ip_address" v-model="computer.ip_address" />
+						<InputPrimary class="input-primary" type="text" name="ip_address" v-model="computer.ip_address" label="IP адрес" />
 					</div>
 					<div class="input-wrapper">
 						<label for="">MAC адрес</label>
-						<InputPrimary class="input-primary" type="text" name="mac_address" v-model="computer.mac_address" />
+						<InputPrimary class="input-primary" type="text" name="mac_address" v-model="computer.mac_address" label="MAC адрес" />
 					</div>
 					<div>
 						<Button @click.prevent="postComputer" class="btn-accent w-full">Сохранить</Button>
