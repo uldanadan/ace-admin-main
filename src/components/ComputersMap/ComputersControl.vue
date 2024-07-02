@@ -3,7 +3,6 @@ import MapItem from "./component/MapItem.vue";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
-import http from "@/http-common";
 
 const partnersStore = usePartnersStore();
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
@@ -14,9 +13,9 @@ onMounted(async () => {
 	await partnersStore.loadComputers();
 })
 
-const computers = computed(() => partnersStore.getComputers);
+const computers = computed(() => partnersStore.getComputers as { map_x: number, map_y: number }[]);
 
-const gameCenters = computed(() => partnersStore.getGameCenters?.results || []);
+const gameCenters = computed(() => (partnersStore.getGameCenters?.results || []) as any[]);
 
 const map_x = ref();
 const map_y = ref();
@@ -28,7 +27,7 @@ const coordinates = ref({
 	y: ""
 })
 
-const handleMap = e => {
+const handleMap = (e: MouseEvent) => {
 	const map = document.getElementById("map");
 	if (map) {
 		const boxPosition = map.getBoundingClientRect();
@@ -57,7 +56,7 @@ watch([gameCenters, selectedGameCenterUuid.value], () => {
 
 watch(
 	() => selectedGameCenterUuid.value,
-	(newValue, oldValue) => {
+	(newValue) => {
 		selectedGameCenterUuid.value = newValue;
 	}
 );
