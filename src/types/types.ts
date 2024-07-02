@@ -57,3 +57,25 @@ export interface Message {
 export interface Messages { 
 	[key: string]: Message[] 
 }
+
+export interface IZone {
+	uuid: string;
+	name: string;
+	busy_computers: number;
+}
+
+export interface GameCenter {
+	uuid: string;
+	name: string;
+	image: string;
+	rating: number;
+	address: string;
+	latitude: number;
+	longitude: number;
+	rate_from: number;
+	schedule: string;
+	is_available: boolean;
+	class_level: number;
+	app_deeplink: string;
+	zones: IZone[];
+}

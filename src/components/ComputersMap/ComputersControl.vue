@@ -4,6 +4,12 @@ import { usePartnersStore } from "@/stores/usePartnersStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
 
+interface MapItem {
+	map_x: number;
+	map_y: number;
+	number: string;
+}
+
 const partnersStore = usePartnersStore();
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const selectedComputers = ref();
@@ -13,9 +19,14 @@ onMounted(async () => {
 	await partnersStore.loadComputers();
 })
 
-const computers = computed(() => partnersStore.getComputers as { map_x: number, map_y: number }[]);
+const computers = computed(() => {
+	return (partnersStore.getComputers as { map_x: number; map_y: number }[]).map((computer, index) => ({
+		...computer,
+		number: `${index + 1}`
+	})) as MapItem[];
+});
 
-const gameCenters = computed(() => (partnersStore.getGameCenters?.results || []) as any[]);
+const gameCenters = computed(() => (partnersStore.getGameCenters as any)?.results || []);
 
 const map_x = ref();
 const map_y = ref();
