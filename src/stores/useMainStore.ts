@@ -20,6 +20,7 @@ export const useMainStore = defineStore("main", () => {
 	}
 	const loadUserInfo = async () => {
 		const response = await MainDataService.getUserInfo()
+		user.value = response.data
 		console.log("user info " + JSON.stringify(response))
 	}
 	const loadStatistics = (data: Statistics) => {
@@ -45,7 +46,6 @@ export const useMainStore = defineStore("main", () => {
 		// 	console.log(url)
 		// })
 	}
-	//----------------------------------------------------------------------
 	async function loadWorkShift(page) {
 		const response = await MainDataService.getWorkShift(page)
 		console.log("loadWorkShift", response)
@@ -63,6 +63,7 @@ export const useMainStore = defineStore("main", () => {
 		const response = await MainDataService.getGameCenters()
 		gameCenters.value = response.data.results
 	}
+	//----------------------------------------------------------------------
 	const getUser = computed(() => {
 		return user.value
 	})

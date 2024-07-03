@@ -14,7 +14,7 @@ const list = ref([
 	},
 	{
 		name: "Касса",
-		link: ""
+		link: "/open-work-shift"
 	},
 	{
 		name: "Пользователи",

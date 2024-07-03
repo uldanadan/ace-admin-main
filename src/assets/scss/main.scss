@@ -55,6 +55,18 @@ body {
 			@apply bg-brand-primary;
 		}
 	}
+	&-primary {
+		@apply inline-block rounded-xl bg-brand-accent px-5 py-3 text-white text-center cursor-pointer;
+		.loader {
+			@apply inline-block h-full;
+			svg {
+				@apply aspect-square h-full;
+				rect {
+					@apply fill-white;
+				}
+			}
+		}
+	}
 }
 .input-wrapper {
 	label {
