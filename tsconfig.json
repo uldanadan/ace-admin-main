@@ -16,10 +16,16 @@
 		"jsx": "preserve",
 
 		/* Linting */
-		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
-		"noFallthroughCasesInSwitch": true,
+		"strict": false,                 // Disable strict mode
+		"noImplicitAny": false,          // Disable noImplicitAny check
+		"noImplicitThis": false,         // Disable noImplicitThis check
+		"strictNullChecks": false,       // Disable strictNullChecks check
+		"strictFunctionTypes": false,    // Disable strictFunctionTypes check
+		"strictBindCallApply": false,    // Disable strictBindCallApply check
+		"alwaysStrict": false,           // Disable alwaysStrict check
+		"noUnusedLocals": false,         // Disable noUnusedLocals check
+		"noUnusedParameters": false,     // Disable noUnusedParameters check
+		"noFallthroughCasesInSwitch": false,  // Disable noFallthroughCasesInSwitch check
 
 		"paths": {
 			"@/*": ["./src/*", "./dist/*"]

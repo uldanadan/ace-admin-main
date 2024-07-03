@@ -1,6 +1,6 @@
 import http from "@/http-common"
 import type { Product } from "@/types/types";
-import type { GetProductsParams } from "@/types/types";
+import type { GetProductsParams } from "@/pages/shop/types";
 
 class ProductsDataService {
 	getProducts(params: GetProductsParams = {}) {

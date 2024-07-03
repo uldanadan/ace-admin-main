@@ -1,23 +1,25 @@
 <script setup lang="ts">
-import { defineProps } from "vue"
-import Close from "@/components/icons/Close.vue"
+import { defineProps, defineEmits } from "vue";
+import Close from "@/components/icons/Close.vue";
 
-defineProps<{
-	list: {
-		type: Array<any>
-	}
-	isActive: {
-		type: boolean
-	}
-}>()
-const emit = defineEmits(["closeMenu"])
-const close = () => {
-	emit("closeMenu", false)
+interface ListItem {
+	link: string;
+	name: string;
 }
+
+const props = defineProps<{
+	list: ListItem[];
+	isActive: boolean;
+}>();
+
+const emit = defineEmits(["closeMenu"]);
+const close = () => {
+	emit("closeMenu", false);
+};
 </script>
 
 <template>
-	<div class="mobile-nav fixed inset-0 z-40 flex justify-end" :class="{ active: isActive }">
+	<div class="mobile-nav fixed inset-0 z-40 flex justify-end" :class="{ active: props.isActive }">
 		<div @click.prevent="close" class="backdrop"></div>
 		<div class="mobile-nav__bar relative h-full w-[85%] bg-white">
 			<div class="flex justify-end border-b border-brand-line px-5 py-4">
@@ -27,7 +29,7 @@ const close = () => {
 			</div>
 			<nav>
 				<ul class="divide-y divide-brand-line">
-					<li v-for="(item, index) in list" :key="index">
+					<li v-for="(item, index) in props.list" :key="index">
 						<router-link :to="item.link" class="link">{{ item.name }}</router-link>
 					</li>
 				</ul>

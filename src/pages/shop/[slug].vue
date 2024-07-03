@@ -11,6 +11,7 @@ import FileUploader from "@/components/UI/FileUploader.vue"
 import VueSelect from "vue-select";
 import { useRoute, useRouter } from "vue-router";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
+import { FileInfo } from "@/types/types";
 
 const productsStore = useProductsStore();
 const partnersStore = usePartnersStore();
@@ -18,7 +19,7 @@ const categoryStore = useCategoryStore();
 
 const route = useRoute();
 const router = useRouter();
-const product = ref()
+const product = ref<any>();
 
 const crumbs = [
 	{ label: 'Магазин', route: '/shop' },
@@ -27,11 +28,11 @@ const crumbs = [
 ];
 
 const categories = computed(() => {
-	return categoryStore.getCategories?.results;
-})
+	return categoryStore.getCategories || [];
+});
 
 const gameCenters = computed(() => {
-	return partnersStore.getGameCenters?.results || [];
+	return partnersStore.getGameCenters || [];
 });
 
 onMounted(async () => {
@@ -40,9 +41,10 @@ onMounted(async () => {
 	});
 	await categoryStore.loadCategories();
 	await partnersStore.loadGameCenters();
-})
+});
 
 const credentials = ref({
+	uuid: "",
 	name: "",
 	description: "",
 	article: "",
@@ -51,12 +53,13 @@ const credentials = ref({
 	thumbnail: "",
 	category: "",
 	availability_in_game_centers: []
-})
-const selectedCategory = ref(null);
-const selectedGameCenters = ref([]);
+});
+const selectedCategory = ref<any>(null);
+const selectedGameCenters = ref<any[]>([]);
 
 watchEffect(() => {
 	if (product.value) {
+		credentials.value.uuid = product.value.uuid;
 		credentials.value.name = product.value.name || '';
 		credentials.value.article = product.value.article || '';
 		credentials.value.price = product.value.price || 0;
@@ -68,7 +71,6 @@ watchEffect(() => {
 	}
 });
 
-
 const updateProduct = async () => {
 	try {
 		if (!selectedCategory.value) {
@@ -77,7 +79,7 @@ const updateProduct = async () => {
 		}
 		credentials.value.category = selectedCategory.value.uuid;
 		credentials.value.availability_in_game_centers = selectedGameCenters.value.map(center => center?.uuid);
-
+		// @ts-ignore
 		await productsStore.updateProduct(product.value.uuid, credentials.value);
 		await router.push("/shop");
 	} catch (err) {
@@ -86,7 +88,7 @@ const updateProduct = async () => {
 		await productsStore.loadProducts();
 		// toast.success("Продукт успешно изменен!");
 	}
-}
+};
 
 const deletedProduct = async () => {
 	try {
@@ -97,10 +99,10 @@ const deletedProduct = async () => {
 	} finally {
 		toast.success("Продукт успешно удален!");
 	}
-}
+};
 
-const handleFileUploaded = (uuid) => {
-	product.value.thumbnail = uuid;
+const handleFileUploaded = (fileInfo: FileInfo) => {
+	product.value.thumbnail = fileInfo.uuid;
 };
 </script>
 
@@ -128,7 +130,7 @@ const handleFileUploaded = (uuid) => {
 				</div>
 				<div v-if="product.price != null" class="input-wrapper">
 					<label for="" class="label">Цена:</label>
-					<InputPrimary v-model="credentials.price" class="input-primary" type="number" name="name" label="" />
+					<InputPrimary v-model="product.price" class="input-primary" type="number" name="name" label="" />
 				</div>
 				<div v-if="product.amount" class="input-wrapper">
 					<label for="" class="label">Кол-во:</label>
@@ -143,11 +145,8 @@ const handleFileUploaded = (uuid) => {
 				</div>
 				<div class="relative">
 					<label for="" class="mb-2 block label">Клуб:</label>
-					<div class="flex items-center flex-wrap	">
+					<div class="flex items-center flex-wrap">
 						<VueSelect :options="gameCenters" v-model="selectedGameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
-						<Button class="btn-plus">
-							<img src="@/assets/img/icons/plus.svg">
-						</Button>
 					</div>
 				</div>
 				<div class="input-wrapper">

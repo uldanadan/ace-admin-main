@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+
 interface OrderStatusGroupProps {
 	orders: Array<any>;
 	title: string;
@@ -9,8 +11,8 @@ interface OrderStatusGroupProps {
 const props = defineProps<OrderStatusGroupProps>();
 const emit = defineEmits(['update-status']);
 
-const formatDate = (dateString) => {
-	const options = {
+const formatDate = (dateString: string) => {
+	const options: Intl.DateTimeFormatOptions = {
 		day: '2-digit',
 		month: '2-digit',
 		year: 'numeric',
@@ -21,14 +23,14 @@ const formatDate = (dateString) => {
 	return new Intl.DateTimeFormat('ru-RU', options).format(new Date(dateString));
 };
 
-const totalPrice = (order) => order.products.reduce((total, product) => total + product.price * (product.quantity || 1), 0);
+const totalPrice = (order: any) => order.products.reduce((total: number, product: any) => total + product.price * (product.quantity || 1), 0);
 
-const totalQuantity = (order) => {
-	return order.products.reduce((total, product) => total + (product.quantity || 1), 0);
+const totalQuantity = (order: any) => {
+	return order.products.reduce((total: number, product: any) => total + (product.quantity || 1), 0);
 };
 
-const handleClick = (order) => {
-	const productUuids = order.products.map(product => product.uuid);
+const handleClick = (order: any) => {
+	const productUuids = order.products.map((product: any) => product.uuid);
 	emit('update-status', [order.uuid]);
 };
 
@@ -66,7 +68,7 @@ const handleClick = (order) => {
 				<div class="flex items-center justify-between">
 					<p class="text-sm">Дата: {{ formatDate(order.created) }}</p>
 					<p class="text-sm">{{ totalQuantity(order) }} единиц</p>
-					<p class="font-semibold">{{order.price }} ₸</p>
+					<p class="font-semibold">{{ order.price }} ₸</p>
 				</div>
 			</div>
 		</div>

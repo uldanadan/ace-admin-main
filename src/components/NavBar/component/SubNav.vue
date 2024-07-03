@@ -64,7 +64,7 @@ const navItems = {
 };
 
 const gameCenters = computed(() => {
-	return partnersStore.getGameCenters?.results || [];
+	return partnersStore.getGameCenters || [];
 });
 
 onMounted(async () => {

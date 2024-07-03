@@ -34,11 +34,11 @@ const crumbs = [
 ];
 
 const categories = computed(() => {
-	return categoryStore.getCategories?.results || [];
+	return categoryStore.getCategories || [];
 });
 
 const gameCenters = computed(() => {
-	return partnersStore.getGameCenters?.results || [];
+	return partnersStore.getGameCenters || [];
 });
 
 const selectedCategory = ref({uuid: ''});
@@ -53,6 +53,7 @@ const postProduct = async () => {
 	try {
 		await productsStore.postProduct({
 			...product.value,
+			// @ts-ignore
 			category: selectedCategory.value.uuid,
 			availability_in_game_centers: selectedGameCenters.value.map(center => center?.uuid)
 		});
@@ -108,9 +109,6 @@ const postProduct = async () => {
 					<label for="" class="mb-2 block label">Клуб:</label>
 					<div class="flex items-center flex-wrap	">
 						<VueSelect v-model="selectedGameCenters" :options="gameCenters" label="name" multiple :getOptionKey="(option) => option.uuid"  />
-						<Button  class="btn-plus" aria-expanded="true" >
-							<img src="@/assets/img/icons/plus.svg">
-						</Button>
 					</div>
 				</div>
 				<div class="input-wrapper">

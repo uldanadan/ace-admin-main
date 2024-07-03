@@ -2,15 +2,22 @@
 import { ref, defineProps, onMounted } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue"
 
+// Define the type for the options
+interface GameCenterOption {
+	uuid: string;
+	name: string;
+}
+
 const props = defineProps({
 	options: {
-		type: Array
+		type: Array as () => GameCenterOption[],
+		required: true
 	}
-})
+});
 
-const selectedOption =  ref(null);
+const selectedOption = ref<GameCenterOption | null>(null);
 
-const filterByGameCenter = (center?) => {
+const filterByGameCenter = (center?: GameCenterOption) => {
 	selectedOption.value = center;
 	if (center) {
 		localStorage.setItem('selectedGameCenter', JSON.stringify(center));
@@ -18,7 +25,7 @@ const filterByGameCenter = (center?) => {
 		localStorage.removeItem('selectedGameCenter');
 	}
 	window.location.reload();
-}
+};
 
 onMounted(() => {
 	const storedGameCenter = localStorage.getItem('selectedGameCenter');
@@ -32,14 +39,16 @@ onMounted(() => {
 	<Listbox>
 		<template #default="{ open }">
 			<ListboxButton class="flex justify-between items-center px-5 py-3" aria-haspopup="listbox" aria-expanded="true">
-				<p class="mr-5 line-clamp-1 inline-block whitespace-nowrap text-sm text-gray-500 lg:text-base">{{ selectedOption ? selectedOption.name : 'Все клубы' }}</p>
+				<p class="mr-5 line-clamp-1 inline-block whitespace-nowrap text-sm text-gray-500 lg:text-base">
+					{{ selectedOption ? selectedOption.name : 'Все клубы' }}
+				</p>
 				<img src="../../assets/img/icons/down-center.svg">
 			</ListboxButton>
 			<ListboxOptions class="options">
-				<ListboxOption :value="''" class="options__item text-gray-500" @click="filterByGameCenter()" :class="{ 'bg-brand-accent text-white': !selectedOption }">
+				<ListboxOption :value="null" class="options__item text-gray-500" @click="filterByGameCenter()" :class="{ 'bg-brand-accent text-white': !selectedOption }">
 					Все клубы
 				</ListboxOption>
-				<ListboxOption v-for="(option, index) in options" :key="index" :value="option" class="options__item text-gray-500" @click="filterByGameCenter(option)" :class="{ 'bg-brand-accent text-white': selectedOption?.uuid === option.uuid }">
+				<ListboxOption v-for="(option, index) in props.options" :key="index" :value="option" class="options__item text-gray-500" @click="filterByGameCenter(option)" :class="{ 'bg-brand-accent text-white': selectedOption?.uuid === option.uuid }">
 					{{ option.name }}
 				</ListboxOption>
 			</ListboxOptions>

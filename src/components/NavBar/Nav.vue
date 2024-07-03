@@ -2,10 +2,7 @@
 import { ref, watch } from "vue";
 import MobileNav from "@/components/NavBar/component/MobileNav.vue";
 import SabNav from  "@/components/NavBar/component/SubNav.vue";
-import { useRoute } from "vue-router"
 
-const route = useRoute();
-const Logo = new URL("/img/icons/logo.svg", import.meta.url).href
 const list = ref([
 	{
 		name: "Карта клуба",
@@ -23,7 +20,6 @@ const list = ref([
 		name: "Пользователи",
 		link: "/users"
 	},
-
 	{
 		name: "Статистика",
 		link: "/statistics"
@@ -43,11 +39,13 @@ const closeMenu = (value: boolean) => {
 watch(
 	openedMobileNav,
 	newValue => {
-		const html = document.querySelector("html")
-		if (newValue === true) {
-			html.classList.add("no-scroll")
-		} else {
-			html.classList.remove("no-scroll")
+		const html = document.querySelector("html");
+		if (html) { // Check if html element exists
+			if (newValue === true) {
+				html.classList.add("no-scroll");
+			} else {
+				html.classList.remove("no-scroll");
+			}
 		}
 	},
 	{ immediate: true }

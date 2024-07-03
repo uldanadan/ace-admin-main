@@ -26,7 +26,7 @@ const computers = computed(() => {
 	})) as MapItem[];
 });
 
-const gameCenters = computed(() => (partnersStore.getGameCenters as any)?.results || []);
+const gameCenters = computed(() => (partnersStore.getGameCenters || []));
 
 const map_x = ref();
 const map_y = ref();
@@ -62,7 +62,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)   partnersStore.loadComputers();
+	if (gameCenters.value.length)  partnersStore.loadComputers();
 })
 
 watch(
@@ -71,8 +71,6 @@ watch(
 		selectedGameCenterUuid.value = newValue;
 	}
 );
-
-
 </script>
 
 <template>

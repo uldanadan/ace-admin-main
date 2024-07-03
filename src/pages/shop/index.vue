@@ -22,9 +22,9 @@ const crumbs = [
 	{ label: 'Товары' }
 ];
 
-const categories = computed(() => categoryStore.getCategories?.results || []);
+const categories = computed(() => categoryStore.getCategories || []);
 
-const products = computed(() => productsStore.getProducts?.results || []);
+const products = computed(() => productsStore.getProducts || []);
 
 const goToSlug = product => {
 	router.push({ path: `/shop/${product.uuid}` });
@@ -105,7 +105,7 @@ watch(searchParams, async () => {
 								</td>
 								<td>
 									<div>
-										<p>{{ product.category.name }}</p>
+										<p>{{ product.category?.name }}</p>
 									</div>
 								</td>
 								<td>

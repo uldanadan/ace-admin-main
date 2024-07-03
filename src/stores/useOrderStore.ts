@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { ref, computed } from "vue";
 import OrderDataService from "@/services/OrderDataService";
+import { Product } from "@/types/types";
 
 export const useOrderStore = defineStore("orders", () => {
 	const orders = ref([]);
@@ -8,7 +9,7 @@ export const useOrderStore = defineStore("orders", () => {
 
 	const loadOrders = async (params: Record<string, any> = {}) => {
 		const response = await OrderDataService.getOrders(params);
-		orders.value = response.data;
+		orders.value = response.data.results;
 		count.value = response.data.count;
 	};
 	const updateOrder = async (uuid: string, data: Product) => {

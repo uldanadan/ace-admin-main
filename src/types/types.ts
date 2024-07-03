@@ -5,13 +5,15 @@ export interface NavList {
 export interface Product {
 	uuid: string
 	name: string
-	descrption: string
+	description: string
 	article: string
 	price: number
 	amount: number
-	thumbnail: string
-	category: string
+	thumbnail: { image: string };
+	category: { name: string };
+	availability_in_game_centers: { name: string }[];
 }
+
 export interface Statistics {
 	other_expenses: number
 	cash_paid_for_taxes: number

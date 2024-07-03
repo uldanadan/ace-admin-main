@@ -1,27 +1,33 @@
 <script setup lang="ts">
-import { ref, defineProps } from "vue"
-import FileTransferDataService from "@/services/FiletransferDataService"
-import { FileInfo } from "@/types/types"
-
-const emit = defineEmits<{
-	(event: "onFileUploaded", payload: FileInfo): void
-}>()
+import { ref, defineProps, defineEmits } from "vue";
+import FileTransferDataService from "@/services/FiletransferDataService";
+import { FileInfo } from "@/types/types";
 
 const props = defineProps<{
 	initialImage?: string;
 }>()
 
+const emit = defineEmits<{
+	(event: "onFileUploaded", payload: FileInfo): void;
+}>()
+
 const imageName = ref<string>('');
 
-const onFileChange = async (e) => {
-	const formData = new FormData();
-	formData.append('is_active', true);
-	formData.append('image', e.target.files[0]);
+const onFileChange = async (e: Event) => {
+	const target = e.target as HTMLInputElement;
+	if (!target.files) return;
 
-	FileTransferDataService.postImage(formData).then((r) => {
-		emit("onFileUploaded", r.data);
-		imageName.value = e.target.files[0].name;
-	})
+	const formData = new FormData();
+	formData.append('is_active', 'true');
+	formData.append('image', target.files[0]);
+
+	try {
+		const response = await FileTransferDataService.postImage(formData);
+		emit("onFileUploaded", response.data);
+		imageName.value = target.files[0].name;
+	} catch (error) {
+		console.error('Error uploading image:', error);
+	}
 }
 </script>
 
@@ -32,7 +38,6 @@ const onFileChange = async (e) => {
 		</label>
 		<input id="fileInput" type="file" accept="image/*" @change="onFileChange">
 		<span v-if="imageName" class="file-name ml-2">{{ imageName }}</span>
-<!--		<img v-if="imageName" :src="imageName" alt="Uploaded Image" class="ml-2" style="max-width: 100px;">-->
 		<img v-if="props.initialImage" :src="props.initialImage" alt="Uploaded Image" class="ml-2" style="max-width: 100px;">
 	</div>
 </template>

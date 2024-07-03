@@ -1,5 +1,5 @@
 import http from "@/http-common";
-import type { GetUserParams } from "@/types/types";
+import { GetUserParams } from "@/pages/users/types";
 
 class UsersDataService {
 	getUsers(params: GetUserParams = {}) {

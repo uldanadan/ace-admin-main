@@ -9,13 +9,13 @@ export const usePartnersStore = defineStore("partners", () => {
 
 	const loadGameCenters = async () => {
 		const response = await PartnersDataService.getGameCenters();
-		gameCenters.value = response.data;
+		gameCenters.value = response.data.results;
 	}
 	const loadComputers = async () => {
 		try {
 			const queries = [];
-			if (Array.isArray(gameCenters.value.results)) {
-				for (const gameCenter of gameCenters.value.results) {
+			if (Array.isArray(gameCenters.value)) {
+				for (const gameCenter of gameCenters.value) {
 					for (const zone of gameCenter.zones) {
 						queries.push(PartnersDataService.getComputersFromZone(gameCenter.uuid, zone.uuid));
 					}

@@ -10,7 +10,7 @@ export const useProductsStore = defineStore("products", () => {
 	//----------------------------------------------------------------------
 	const loadProducts = async (params: Record<string, any> = {}) => {
 		const response = await ProductsDataService.getProducts(params);
-		products.value = response.data;
+		products.value = response.data.results;
 		count.value = response.data.count;
 	};
 	const loadProduct = async (id: string) => {

@@ -1,22 +1,23 @@
 import { createApp, DefineComponent } from "vue";
 import { createPinia } from "pinia";
-import Vue3Toastify, { ToastContainerOptions } from "vue3-toastify"
+import Vue3Toastify, { ToastContainerOptions } from "vue3-toastify";
 import VueDatePicker from '@vuepic/vue-datepicker';
 import router from "@/plugins/router.ts";
 import "@/assets/scss/main.scss";
 import App from "@/layouts/App.vue";
 
 import VueSelect from "vue-select";
-import '@vuepic/vue-datepicker/dist/main.css'
-const pinia = createPinia()
+import '@vuepic/vue-datepicker/dist/main.css';
 
-const app = createApp(App)
+const pinia = createPinia();
 
-app.use(router)
-app.use(pinia)
+const app = createApp(App);
+
+app.use(router);
+app.use(pinia);
 app.component('VueDatePicker', VueDatePicker);
 
-app.component("VueSelect", VueSelect as DefineComponent);
+app.component("VueSelect", VueSelect as unknown as DefineComponent);
 
 app.use(Vue3Toastify, {
 	autoClose: 4000,
@@ -25,4 +26,5 @@ app.use(Vue3Toastify, {
 		userSelect: "initial"
 	}
 } as ToastContainerOptions);
-app.mount("#app")
+
+app.mount("#app");

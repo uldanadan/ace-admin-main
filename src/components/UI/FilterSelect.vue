@@ -4,10 +4,11 @@ import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headless
 
 const props = defineProps({
 	options: {
-		type: Array,
+		type: Array as () => { name: string, number: string }[],
 		required: true,
 	},
 	updateCategory: {
+		// @ts-ignore
 		type: Function,
 		required: true,
 	},
@@ -17,23 +18,24 @@ const props = defineProps({
 	},
 })
 
-const selectedCategory = ref('');
-const selectedOption =  ref(null);
+const selectedCategory = ref<{ name: string, number: string } | null>(null);
+const selectedOption = ref<{ name: string, number: string } | null>(null);
 
 const defaultLabel = computed(() => {
 	return props.type === "category" ? "Все категории" : "Все заказы";
 });
 
-const filterByCategory = (category) => {
+const filterByCategory = (category: { name: string, number: string } | null) => {
 	selectedCategory.value = category;
 	selectedOption.value = category;
+	// @ts-ignore
 	props.updateCategory(category);
 }
 </script>
 
 <template>
 	<Listbox>
-		<template #default="{ open }">
+		<template #default="{ /* remove 'open' */ }">
 			<ListboxButton class="flex justify-between min-w-48 items-center rounded-2xl border-[1.5px] border-brand-accent bg-white px-5 py-2" aria-haspopup="listbox" aria-expanded="true">
 				<p class="mr-5 line-clamp-1 inline-block whitespace-nowrap text-sm text-brand-accent lg:text-base">
 					{{ selectedOption ? (type === 'category' ? selectedOption.name : 'компьютер №' + selectedOption.number) : defaultLabel }}
@@ -44,7 +46,7 @@ const filterByCategory = (category) => {
 				<ListboxOption :value="null" class="options__item text-gray-500" @click="filterByCategory(null)" :class="{ 'bg-brand-accent text-white': selectedCategory === null || selectedOption === null }">
 					{{ defaultLabel }}
 				</ListboxOption>
-				<ListboxOption v-for="(option, index) in options" :key="index" :value="option" class="options__item text-gray-500" @click="filterByCategory(option)" :class="{ 'bg-brand-accent text-white': selectedOption === option }">
+				<ListboxOption v-for="(option, index) in options" :key="index" :value="option" class="options__item text-gray-500" @click="() => filterByCategory(option)" :class="{ 'bg-brand-accent text-white': selectedOption === option }">
 					{{ type === "category" ?  option.name : 'компьютер №' + option.number }}
 				</ListboxOption>
 			</ListboxOptions>

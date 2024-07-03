@@ -1,32 +1,31 @@
 <script setup lang="ts">
-import { ref, onMounted, computed, watch } from "vue"
+import { ref, onMounted, computed, watch } from "vue";
 import { useOrderStore } from "@/stores/useOrderStore";
 import { usePartnersStore } from "@/stores/usePartnersStore";
 import { useRouter } from "vue-router";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
-import VueSelect from "vue-select";
-import { GetOrdersParams } from "./types";
 import FilterSelect from "@/components/UI/FilterSelect.vue";
 import Pagination from '@/components/UI/Pagination.vue';
 import OrderStatusGroup from "./component/OrderStatusGroup.vue";
+import { GetOrdersParams } from "./types";
 
 const orderStore = useOrderStore();
 const partnersStore = usePartnersStore();
 const router = useRouter();
 
-const searchParams = ref<GetOrdersParams>({page: 1});
+const searchParams = ref<GetOrdersParams>({ page: 1 });
 const today = new Date();
 const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate(), 0, 0, 0);
 startDate.setDate(startDate.getDate() - 7);
-const dates = ref([startDate, today]);
+const dates = ref<[Date, Date]>([startDate, today]);
 
 const crumbs = [
 	{ label: 'Магазин', route: '/shop' },
 	{ label: 'Заказы' }
 ];
 
-const order = computed(() => orderStore.getOrders?.results);
+const order = computed(() => orderStore.getOrders);
 const computers = computed(() => partnersStore.getComputers);
 
 const newProducts = computed(() => order.value?.filter(item => item.status === 'FOR_WAITING' && item.products.length > 0) ?? []);
@@ -34,19 +33,21 @@ const inProgressProducts = computed(() => order.value?.filter(item => item.statu
 const completedProducts = computed(() => order.value?.filter(item => item.status === 'COMPLETED' && item.products.length > 0) ?? []);
 const canceledProducts = computed(() => order.value?.filter(item => item.status === 'CANCELED' && item.products.length > 0) ?? []);
 
-const updateProductStatus = async (productUuids, status) => {
+const updateProductStatus = async (productUuids: string[], status: string) => {
 	try {
 		await Promise.all(productUuids.map(async (uuid) => {
-			const currentOrder = order.value.find(item => item.uuid === uuid);
+			const currentOrder = order.value!.find(item => item.uuid === uuid);
 
-			const updateData = {
-				...currentOrder,
-				status,
-				computer: currentOrder.computer.uuid,
-				products: currentOrder.products.map(product => product.uuid)
-			};
+			if (currentOrder) {
+				const updateData = {
+					...currentOrder,
+					status,
+					computer: currentOrder.computer.uuid,
+					products: currentOrder.products.map(product => product.uuid)
+				};
 
-			await orderStore.updateOrder(uuid, updateData);
+				await orderStore.updateOrder(uuid, updateData);
+			}
 		}));
 	} catch (error) {
 		console.error('Failed to update product status:', error);
@@ -55,11 +56,11 @@ const updateProductStatus = async (productUuids, status) => {
 
 const updateOrders = (computer: { uuid: string }) => {
 	const computerUUID = computer ? computer.uuid : '';
-	searchParams.value = { ...searchParams.value, computer: computerUUID, page: 1, created_from: (dates.value[0]), created_to: dates.value[1] };
+	searchParams.value = { ...searchParams.value, computer: computerUUID, page: 1, created_from: dates.value[0]?.toISOString() || null, created_to: dates.value[1]?.toISOString() || null };
 };
 
 const updatePage = (page: number) => {
-	searchParams.value = { ...searchParams.value, page: page };
+	searchParams.value = { ...searchParams.value, page };
 };
 
 onMounted(async () => {
@@ -69,11 +70,11 @@ onMounted(async () => {
 	} catch (err) {
 		console.log("Failed loadOrders", err);
 	}
-})
+});
 
 watch(searchParams, async () => {
 	await orderStore.loadOrders(searchParams.value);
-}, {deep: true});
+}, { deep: true });
 </script>
 
 <template>
@@ -96,7 +97,7 @@ watch(searchParams, async () => {
 							:format="'dd.MM.yyyy HH:mm'"
 							@change="updateOrders"
 						></VueDatePicker>
-						<button class="btn-accent ml-2" @click="updateOrders">Показать</button>
+						<button class="btn-accent ml-2" @click="updateOrders({ uuid: '' })">Показать</button>
 					</div>
 				</div>
 			</div>
@@ -125,6 +126,8 @@ watch(searchParams, async () => {
 				<OrderStatusGroup
 					:orders="canceledProducts"
 					title="Отменены"
+					text=""
+					buttonClass=""
 				/>
 			</div>
 			<div v-else style="height: 100vh; padding-top: 2rem">
@@ -145,3 +148,4 @@ watch(searchParams, async () => {
 	@apply font-semibold bg-gray-100 p-2 rounded-lg border border-brand-line text-gray-500;
 }
 </style>
+
