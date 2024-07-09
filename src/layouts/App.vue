@@ -1,6 +1,6 @@
 <script setup>
 import { onMounted, ref } from "vue"
-import Nav from "@/components/NavBar/Nav.vue"
+import { Nav, Chat } from "@/components"
 import { useMainStore } from "@/stores/useMainStore"
 import PageLoader from "@/components/PageLoader.vue"
 const mainStore = useMainStore()
@@ -17,6 +17,7 @@ const topPanelRef = ref(null)
 	<PageLoader />
 	<div v-if="$route.meta.requiresAuth" ref="topPanelRef">
 		<Nav />
+		<Chat />
 	</div>
 	<main>
 		<router-view v-slot="{ Component }">
