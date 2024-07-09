@@ -58,7 +58,8 @@ watch(
 			<div class="h-full xl:px-20">
 				<div class="flex h-full items-center justify-between">
 					<div class="flex h-full items-center justify-center px-4 xl:px-0">
-						<img src="../../assets/img/icons/logo.svg" class="w-28 md:w-36" alt="" />
+						<img src="../../assets/img/icons/logo.png" class="w-11" alt="" />
+						<h3 class="text-xl text-slate-200 font-bold pl-2">ACE Gaming</h3>
 					</div>
 					<nav class="hidden xl:block">
 						<ul class="flex items-center space-x-10">
