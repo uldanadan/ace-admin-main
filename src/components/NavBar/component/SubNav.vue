@@ -48,7 +48,12 @@ const navItems = {
 		{name: "Магазин", link: ""}
 	],
 	"/statistics": [
-		{ name: "Статистика", link: "/statistics" }
+		{ name: "Статистика", link: "/statistics" },
+		{ name: "Отчеты", link: "/work-shift" }
+	],
+	"/work-shift": [
+		{ name: "Статистика", link: "/statistics" },
+		{ name: "Отчеты", link: "/work-shift" }
 	],
 	"/content": [
 		{ name: "Весь контент", link: "" }

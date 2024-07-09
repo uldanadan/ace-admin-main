@@ -1,10 +1,12 @@
 <script setup>
-import moment from "moment"
-import { ref, onMounted, computed } from "vue"
-import { useMainStore } from "@/stores/useMainStore"
-import Pagination from "@/components/Pagination.vue"
-import { formatDate } from "@/helpers/format.js"
-const mainStore = useMainStore()
+import moment from "moment";
+import { ref, onMounted, computed } from "vue";
+import { useMainStore } from "@/stores/useMainStore";
+import Pagination from "@/components/Pagination.vue";
+import { formatDate } from "@/helpers/format.js";
+
+const mainStore = useMainStore();
+
 onMounted(async () => {
 	await loadWorkShiftData()
 })
@@ -33,7 +35,7 @@ async function loadWorkShiftData(page = 1) {
 </script>
 
 <template>
-	<div :style="`height: calc(100vh - ${getTopPanelHeight}px)`">
+	<div :style="`height: calc(100vh - ${getTopPanelHeight}px)`" class="w-container">
 		<div class="table-secondary">
 			<table>
 				<thead>
