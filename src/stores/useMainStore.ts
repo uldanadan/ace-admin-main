@@ -47,7 +47,6 @@ export const useMainStore = defineStore("main", () => {
 	}
 	async function loadWorkShift(page) {
 		const response = await MainDataService.getWorkShift(page)
-		console.log("loadWorkShift", response)
 		if (response.status === 200) {
 			workShiftData.value = response.data
 		}
