@@ -14,12 +14,13 @@ interface MapItem {
 const partnersStore = usePartnersStore();
 const adminPanelsStore = useAdminPanelsStore();
 
+const searchParams = ref({game_center: partnersStore.getSelectedGameCenter?.uuid});
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const selectedComputers = ref();
 const emit = defineEmits([ "openActionSidebar"]);
 
 onMounted(async () => {
-	await adminPanelsStore.loadComputers();
+	await adminPanelsStore.loadComputers(searchParams.value);
 })
 
 const computers = computed(() => {
@@ -65,7 +66,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)  adminPanelsStore.loadComputers();
+	if (gameCenters.value.length)  adminPanelsStore.loadComputers(searchParams.value);
 })
 
 watch(

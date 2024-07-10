@@ -2,7 +2,6 @@
 import { ref, defineProps, onMounted } from 'vue';
 import { Listbox, ListboxButton, ListboxOptions, ListboxOption } from "@headlessui/vue"
 
-// Define the type for the options
 interface GameCenterOption {
 	uuid: string;
 	name: string;

@@ -5,7 +5,6 @@ import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
 
-// Интерфейс для компьютеров
 interface Computer {
 	map_x: number;
 	map_y: number;
@@ -15,12 +14,13 @@ interface Computer {
 const partnersStore = usePartnersStore();
 const adminPanelsStore = useAdminPanelsStore();
 
+const searchParams = ref({game_center: partnersStore.getSelectedGameCenter?.uuid});
 const selectedComputers = ref<Computer[]>([]);
 const selectedGameCenterUuid = ref(partnersStore.getSelectedGameCenter?.uuid);
 const emit = defineEmits(["openSidebar", "openChangeSidebar"]);
 
 const loadComputers = async () => {
-	await adminPanelsStore.loadComputers();
+	await adminPanelsStore.loadComputers(searchParams.value);
 	computers.value.forEach(d => {
 		loadedCoordinates.value.push({ x: d.map_x, y: d.map_y });
 	});

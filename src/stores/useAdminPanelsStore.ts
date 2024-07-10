@@ -14,9 +14,9 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 			console.error("Error loading zones:", error);
 		}
 	}
-	const loadComputers = async () => {
+	const loadComputers = async (params: Record<string, any> = {}) => {
 		try {
-			const response = await AdminPanelDataService.getComputers();
+			const response = await AdminPanelDataService.getComputers(params);
 			computers.value = response.data;
 		} catch (error) {
 			console.error('Failed to load computers:', error);

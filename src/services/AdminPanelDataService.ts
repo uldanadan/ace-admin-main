@@ -4,8 +4,8 @@ class AdminPanelDataService {
 	getZone() {
 		return http.get("/admin_panel/zone/");
 	}
-	getComputers = () => {
-		return http.get(`/admin_panel/computers/`)
+	getComputers = (params) => {
+		return http.get(`/admin_panel/computers/`, { params })
 	}
 }
 
