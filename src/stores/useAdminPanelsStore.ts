@@ -4,6 +4,7 @@ import AdminPanelDataService from "@/services/AdminPanelDataService.ts";
 
 export const useAdminPanelsStore = defineStore("admin_panel", () => {
 	const zone = ref();
+	const computers = ref([]);
 
 	const loadZones = async () => {
 		try {
@@ -13,8 +14,19 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 			console.error("Error loading zones:", error);
 		}
 	}
+	const loadComputers = async () => {
+		try {
+			const response = await AdminPanelDataService.getComputers();
+			computers.value = response.data;
+		} catch (error) {
+			console.error('Failed to load computers:', error);
+		}
+	}
 	const getZone = computed(() => {
 		return zone.value;
 	})
-	return { zone, getZone, loadZones }
+	const getComputers = computed(() => {
+		return computers.value;
+	})
+	return { zone, computers, getZone, getComputers, loadZones, loadComputers }
 })

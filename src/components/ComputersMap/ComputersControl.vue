@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import MapItem from "./component/MapItem.vue";
 import { usePartnersStore } from "@/stores/usePartnersStore";
+import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 import { computed, onMounted, ref, watchEffect, watch } from "vue";
 import { refDebounced } from "@vueuse/core";
 
@@ -11,16 +12,18 @@ interface MapItem {
 }
 
 const partnersStore = usePartnersStore();
+const adminPanelsStore = useAdminPanelsStore();
+
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
 const selectedComputers = ref();
 const emit = defineEmits([ "openActionSidebar"]);
 
 onMounted(async () => {
-	await partnersStore.loadComputers();
+	await adminPanelsStore.loadComputers();
 })
 
 const computers = computed(() => {
-	return (partnersStore.getComputers as { map_x: number; map_y: number }[]).map((computer, index) => ({
+	return (adminPanelsStore.getComputers as { map_x: number; map_y: number }[]).map((computer, index) => ({
 		...computer,
 		number: `${index + 1}`
 	})) as MapItem[];
@@ -62,7 +65,7 @@ watchEffect(() => {
 })
 
 watch([gameCenters, selectedGameCenterUuid.value], () => {
-	if (gameCenters.value.length)  partnersStore.loadComputers();
+	if (gameCenters.value.length)  adminPanelsStore.loadComputers();
 })
 
 watch(

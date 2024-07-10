@@ -21,7 +21,6 @@ export const useMainStore = defineStore("main", () => {
 	const loadUserInfo = async () => {
 		const response = await MainDataService.getUserInfo()
 		user.value = response.data
-		console.log("user info " + JSON.stringify(response))
 	}
 	const loadStatistics = (data: Statistics) => {
 		MainDataService.getStatistics(data).then(response => {
