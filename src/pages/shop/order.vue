@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed, watch } from "vue";
 import { useOrderStore } from "@/stores/useOrderStore";
-import { usePartnersStore } from "@/stores/usePartnersStore";
+import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 import { useRouter } from "vue-router";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 import VueDatePicker from '@vuepic/vue-datepicker';
@@ -11,7 +11,7 @@ import OrderStatusGroup from "./component/OrderStatusGroup.vue";
 import { GetOrdersParams } from "./types";
 
 const orderStore = useOrderStore();
-const partnersStore = usePartnersStore();
+const adminPanelsStore = useAdminPanelsStore();
 const router = useRouter();
 
 const searchParams = ref<GetOrdersParams>({ page: 1 });
@@ -26,7 +26,7 @@ const crumbs = [
 ];
 
 const order = computed(() => orderStore.getOrders);
-const computers = computed(() => partnersStore.getComputers);
+const computers = computed(() => adminPanelsStore.getComputers);
 
 const newProducts = computed(() => order.value?.filter(item => item.status === 'FOR_WAITING' && item.products.length > 0) ?? []);
 const inProgressProducts = computed(() => order.value?.filter(item => item.status === 'PAID' && item.products.length > 0) ?? []);
@@ -66,7 +66,7 @@ const updatePage = (page: number) => {
 onMounted(async () => {
 	try {
 		await orderStore.loadOrders(searchParams.value);
-		await partnersStore.loadComputers();
+		await adminPanelsStore.loadComputers();
 	} catch (err) {
 		console.log("Failed loadOrders", err);
 	}
