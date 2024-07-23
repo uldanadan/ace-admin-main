@@ -24,10 +24,7 @@ onMounted(async () => {
 })
 
 const computers = computed(() => {
-	return (adminPanelsStore.getComputers as { map_x: number; map_y: number }[]).map((computer, index) => ({
-		...computer,
-		number: `${index + 1}`
-	})) as MapItem[];
+	return adminPanelsStore.getComputers as MapItem[];
 });
 
 const gameCenters = computed(() => (partnersStore.getGameCenters || []));
