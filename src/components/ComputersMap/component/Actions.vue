@@ -2,12 +2,34 @@
 import { defineProps, onMounted, ref } from "vue"
 import Button from "@/components/UI/Button.vue";
 import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
+import { useAuthStore } from "@/stores/useAuthStore";
+import CashModal from "@/components/Modals/CashModal.vue"
+
 
 const props = defineProps({
 	selectedComputers: Array
 });
 
 const adminPanelsStore = useAdminPanelsStore();
+const authStore = useAuthStore()
+
+const showCashModal = ref(false)
+
+const isActive = ref(false);
+
+const toggleActive = () => {
+	isActive.value = !isActive.value;
+	if (isActive.value) {
+		openCashModal();
+	}
+};
+
+const closeCashModal = () => {
+	showCashModal.value = false
+}
+const openCashModal = () => {
+	showCashModal.value = true
+}
 
 const selectedAction = ref<string | null>(null);
 
@@ -24,6 +46,8 @@ const sendCommand = async () => {
 
 	for (const computer of props.selectedComputers) {
 		let commandType = '';
+		let email = '';
+		let password = '';
 
 		switch (selectedAction.value) {
 			case 'turn_off':
@@ -44,12 +68,15 @@ const sendCommand = async () => {
 			case 'stop':
 				commandType = 'stop_session';
 				break;
+			case 'cash':
+				openCashModal()
+				break;
 			default:
 				break;
 		}
 
 		if (commandType) {
-			await adminPanelsStore.sendCommand(commandType, computer.uuid);
+			await adminPanelsStore.sendCommand(commandType, computer.uuid, email, password);
 		}
 	}
 
@@ -108,7 +135,7 @@ onMounted(async () => {
 						<img v-else src="@/assets/img/icons/uiw_login.svg">
 					</div>
 					<div
-						class="flex items-center justify-center py-3 border-x-[1.5px] border-brand-accent w-full cursor-pointer"
+						class="flex items-center justify-center py-3 border-l-[1.5px] border-brand-accent w-full cursor-pointer"
 						:class="{ 'bg-brand-accent': selectedAction === 'flag' }"
 						@click="selectAction('flag')"
 					>
@@ -116,12 +143,22 @@ onMounted(async () => {
 						<img v-else src="@/assets/img/icons/bi_flag.svg" alt="BI Flag">
 					</div>
 					<div
-						class="flex items-center justify-center py-3 w-full cursor-pointer"
+						class="flex items-center justify-center py-3 border-l-[1.5px] border-brand-accent w-full cursor-pointer"
 						:class="{ 'bg-brand-accent rounded-r-3xl': selectedAction === 'stop' }"
 						@click="selectAction('stop')"
 					>
 						<img v-if="selectedAction === 'stop'" src="@/assets/img/icons/stop_session2.svg">
 						<img v-else src="@/assets/img/icons/stop_session.svg">
+					</div>
+				</div>
+				<div class="flex items-center justify-between inline-block border-[1.5px] border-brand-accent rounded-3xl">
+					<div
+						class="flex items-center justify-center py-3 w-full cursor-pointer"
+						:class="{ 'bg-brand-accent rounded-3xl': isActive }"
+						@click.prevent="toggleActive"
+					>
+						<img v-if="isActive" src="@/assets/img/icons/cash2.svg">
+						<img v-else src="@/assets/img/icons/cash.svg">
 					</div>
 				</div>
 				<div>
@@ -131,4 +168,5 @@ onMounted(async () => {
 			</div>
 		</div>
 	</div>
+	<CashModal :show="showCashModal" max-width="lg" @close="closeCashModal" />
 </template>

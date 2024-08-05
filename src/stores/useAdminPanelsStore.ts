@@ -25,14 +25,18 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 		}
 	};
 
-	const sendCommand = async (commandType: string, uuid: string) => {
+	const sendCommand = async (commandType: string, uuid: string, email?: string, password?: string) => {
 		try {
-			const response = await AdminPanelDataService.sendCommand(commandType, uuid);
+			const response = await AdminPanelDataService.sendCommand(commandType, uuid, email, password);
 			commandResult.value = response.data;
 		} catch (error) {
 			console.error("Failed to send command:", error);
 		}
 	};
+
+	const postBalance = async (data) => {
+		await AdminPanelDataService.postBalance(data);
+	}
 
 	const getZone = computed(() => zone.value);
 	const getComputers = computed(() => computers.value);
@@ -46,6 +50,7 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 		loadZones,
 		loadComputers,
 		sendCommand,
+		postBalance,
 		getCommandResult,
 	};
 });

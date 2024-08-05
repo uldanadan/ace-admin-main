@@ -7,12 +7,16 @@ class AdminPanelDataService {
 	getComputers = (params) => {
 		return http.get(`/admin_panel/computers/`, { params })
 	}
-	getCommands = (params) => {
-		return http.get(`/admin_panel/commands/`, { params })
-	}
-	sendCommand = (commandType: string, uuid: string) => {
+	sendCommand(commandType: string, uuid: string, email: string, password: string) {
 		return http.get(`/admin_panel/commands/`, {
-			params: { command_type: commandType, uuid: uuid }
+			params: { command_type: commandType, uuid: uuid, email: email, password: password },
+		});
+	}
+	postBalance(data) {
+		return http.post(`/admin_panel/balance/`, data, {
+			headers: {
+				"Content-Type": "application/json",
+			},
 		});
 	}
 }
