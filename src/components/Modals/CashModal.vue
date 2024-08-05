@@ -25,6 +25,12 @@ const props = defineProps({
 const adminPanelsStore = useAdminPanelsStore();
 const mainStore = useMainStore();
 
+const email = ref("");
+const amount = ref("");
+const gameCenterSlug = ref("");
+
+const getWorkShifts = computed(() => mainStore.workShiftData?.results || []);
+
 const resetState = () => {
 	amount.value = "";
 	email.value = "";
@@ -34,12 +40,6 @@ const close = () => {
 	emit("close");
 	resetState();
 };
-
-const email = ref("");
-const amount = ref("");
-const gameCenterSlug = ref("");
-
-const getWorkShifts = computed(() => mainStore.workShiftData?.results || []);
 
 const fetchGameCenterSlug = () => {
 	const currentWorkShift = getWorkShifts.value.find(shift => shift.user.email === email.value);

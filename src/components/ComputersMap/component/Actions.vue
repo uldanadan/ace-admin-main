@@ -3,8 +3,8 @@ import { defineProps, onMounted, ref } from "vue"
 import Button from "@/components/UI/Button.vue";
 import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 import { useAuthStore } from "@/stores/useAuthStore";
-import CashModal from "@/components/Modals/CashModal.vue"
-
+import CashModal from "@/components/Modals/CashModal.vue";
+import GuestModal from "@/components/Modals/GuestModal.vue";
 
 const props = defineProps({
 	selectedComputers: Array
@@ -14,6 +14,7 @@ const adminPanelsStore = useAdminPanelsStore();
 const authStore = useAuthStore()
 
 const showCashModal = ref(false)
+const showGuestModal = ref(false)
 
 const isActive = ref(false);
 
@@ -30,6 +31,14 @@ const closeCashModal = () => {
 }
 const openCashModal = () => {
 	showCashModal.value = true;
+}
+
+const closeGuestModal = () => {
+	showGuestModal.value = false;
+	// isActive.value = false;
+}
+const openGuestModal = () => {
+	showGuestModal.value = true;
 }
 
 const selectedAction = ref<string | null>(null);
@@ -161,6 +170,14 @@ onMounted(async () => {
 						<img v-else src="@/assets/img/icons/cash.svg">
 					</div>
 				</div>
+				<div class="flex items-center justify-between inline-block border-[1.5px] border-brand-accent rounded-3xl">
+					<div
+						class="flex items-center justify-center py-3 w-full cursor-pointer"
+						@click.prevent="openGuestModal"
+					>
+						<p>guest</p>
+					</div>
+				</div>
 				<div>
 					<Button v-if="selectedAction" @click.prevent="sendCommand" class="btn-accent w-full">Отправить команду</Button>
 					<Button v-else @click.prevent="" class="btn-disabled w-full">Выберите действие</Button>
@@ -169,4 +186,5 @@ onMounted(async () => {
 		</div>
 	</div>
 	<CashModal :show="showCashModal" max-width="lg" @close="closeCashModal" />
+	<GuestModal :show="showGuestModal" max-width="lg" @close="closeGuestModal" />
 </template>

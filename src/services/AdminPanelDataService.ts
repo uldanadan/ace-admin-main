@@ -19,6 +19,13 @@ class AdminPanelDataService {
 			},
 		});
 	}
+	postUser(data) {
+		return http.post(`/admin_panel/user_account/`, data, {
+			headers: {
+				"Content-Type": "application/json",
+			},
+		});
+	}
 }
 
 export default new AdminPanelDataService();

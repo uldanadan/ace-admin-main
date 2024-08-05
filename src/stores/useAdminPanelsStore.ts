@@ -38,6 +38,10 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 		await AdminPanelDataService.postBalance(data);
 	}
 
+	const postUser = async (data) => {
+		await AdminPanelDataService.postUser(data);
+	}
+
 	const getZone = computed(() => zone.value);
 	const getComputers = computed(() => computers.value);
 	const getCommandResult = computed(() => commandResult.value);
@@ -52,5 +56,6 @@ export const useAdminPanelsStore = defineStore("admin_panel", () => {
 		sendCommand,
 		postBalance,
 		getCommandResult,
+		postUser
 	};
 });
