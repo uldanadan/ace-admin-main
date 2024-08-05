@@ -25,8 +25,14 @@ const props = defineProps({
 const adminPanelsStore = useAdminPanelsStore();
 const mainStore = useMainStore();
 
+const resetState = () => {
+	amount.value = "";
+	email.value = "";
+}
+
 const close = () => {
 	emit("close");
+	resetState();
 };
 
 const email = ref("");

@@ -25,10 +25,11 @@ const toggleActive = () => {
 };
 
 const closeCashModal = () => {
-	showCashModal.value = false
+	showCashModal.value = false;
+	isActive.value = false;
 }
 const openCashModal = () => {
-	showCashModal.value = true
+	showCashModal.value = true;
 }
 
 const selectedAction = ref<string | null>(null);
@@ -79,7 +80,6 @@ const sendCommand = async () => {
 			await adminPanelsStore.sendCommand(commandType, computer.uuid, email, password);
 		}
 	}
-
 	selectedAction.value = null;
 }
 
