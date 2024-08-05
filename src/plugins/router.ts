@@ -22,7 +22,7 @@ const routes = [
 		}
 	},
 	{
-		path: "/",
+		path: "/tech",
 		component: ComputersMap,
 		name: "Управление клуба",
 		meta: {
@@ -30,7 +30,7 @@ const routes = [
 		}
 	},
 	{
-		path: "/control",
+		path: "/",
 		component: ComputersControl,
 		name: "Карта клуба",
 		meta: {

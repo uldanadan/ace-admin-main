@@ -16,8 +16,9 @@ const adminPanelsStore = useAdminPanelsStore();
 
 const searchParams = ref({game_center: partnersStore.getSelectedGameCenter?.uuid});
 const selectedGameCenterUuid = ref( partnersStore.getSelectedGameCenter?.uuid);
-const selectedComputers = ref();
-const emit = defineEmits([ "openActionSidebar"]);
+// const selectedComputers = ref();
+const selectedComputers = ref<MapItem[]>([]);
+const emit = defineEmits([ "updateSelectedComputers"]);
 
 onMounted(async () => {
 	await adminPanelsStore.loadComputers(searchParams.value);
@@ -51,12 +52,21 @@ const handleMap = (e: MouseEvent) => {
 		map_y.value = resultY;
 
 		const computer = computers.value.find(computer => computer.map_x === resultX && computer.map_y === resultY);
+		// if (computer) {
+		// 	selectedComputers.value = computer;
+		// 	emit("openActionSidebar", selectedComputers.value);
+		// }
 		if (computer) {
-			selectedComputers.value = computer;
-			emit("openActionSidebar", selectedComputers.value);
+			if (selectedComputers.value.some(c => c.number === computer.number)) {
+				selectedComputers.value = selectedComputers.value.filter(c => c.number !== computer.number);
+			} else {
+				selectedComputers.value.push(computer);
+			}
+			emit("updateSelectedComputers", selectedComputers.value);
 		}
 	}
 }
+
 watchEffect(() => {
 	coordinates.value.x = debouncedX.value;
 	coordinates.value.y = debouncedY.value;

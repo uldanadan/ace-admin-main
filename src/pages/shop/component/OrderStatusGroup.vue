@@ -48,7 +48,7 @@ const handleClick = (order: any) => {
 						<p class="text-sm">Game Center: {{ order.computer.game_center.name }}</p>
 					</div>
 					<div>
-						<button @click="handleClick(order)" :class="buttonClass">{{ text }}</button>
+						<button v-if="text" @click="handleClick(order)" :class="buttonClass">{{ text }}</button>
 						<div class="h-6 w-6 ml-[70%]">
 							<img v-if="order.payment_type === 'CASH'" src="@/assets/img/icons/tenge.png" alt="Tenge" />
 							<img v-else-if="order.payment_type === 'KASPI'" src="@/assets/img/icons/qr.png" alt="Kaspi QR" />
