@@ -44,6 +44,8 @@ export interface Computer {
 	map_x: number;
 	map_y: number;
 	zone_id: string;
+	state: string;
+	uuid: string;
 }
 
 export interface Message {

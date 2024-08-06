@@ -5,10 +5,11 @@ import { useAdminPanelsStore } from "@/stores/useAdminPanelsStore";
 import { useAuthStore } from "@/stores/useAuthStore";
 import CashModal from "@/components/Modals/CashModal.vue";
 import GuestModal from "@/components/Modals/GuestModal.vue";
+import type { Computer } from "@/types/types";
 
-const props = defineProps({
-	selectedComputers: Array
-});
+const props = defineProps<{
+	selectedComputers: Computer[];
+}>();
 
 const adminPanelsStore = useAdminPanelsStore();
 const authStore = useAuthStore()

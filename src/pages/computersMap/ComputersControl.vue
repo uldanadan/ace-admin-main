@@ -3,23 +3,18 @@ import { ref } from "vue";
 import ComputersControl from "@/components/ComputersMap/ComputersControl.vue";
 import Breadcrumbs from "@/components/UI/Breadcrumbs.vue";
 import Actions from "@/components/ComputersMap/component/Actions.vue";
-import Button from "@/components/UI/Button.vue"
-
-interface MapItem {
-	map_x: number;
-	map_y: number;
-	number: string;
-}
+import Button from "@/components/UI/Button.vue";
+import type { Computer } from "@/types/types";
 
 const openedActionSidebar = ref(false);
-const selectedComputers = ref<MapItem[]>([]);
+const selectedComputers = ref<Computer[]>([]);
 
 const crumbs = [
 	{ label: 'Карта клуба', route: '/' },
 	{ label: 'Режим управления' }
 ];
 
-const openActionSidebar = (computers: MapItem[]) => {
+const openActionSidebar = (computers: Computer[]) => {
 	selectedComputers.value = computers;
 }
 

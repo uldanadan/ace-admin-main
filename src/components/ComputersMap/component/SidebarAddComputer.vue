@@ -28,7 +28,9 @@ const computer = ref({
 	number: 0,
 	ip_address: "",
 	mac_address: "",
-	zone_id: ""
+	zone_id: "",
+	state: "",
+	uuid: "",
 });
 
 const zones = computed(() => adminPanelsStore.getZone);
